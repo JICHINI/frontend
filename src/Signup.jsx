@@ -9,10 +9,16 @@ function Signup({ onNavigate }) {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignup = () => {
-    // 회원가입 로직
+
+    if (!id || !password) {
+      alert('아이디와 비밀번호를 입력하세요');
+      return;
+    }
     console.log('회원가입:', { name, id, password, confirmPassword });
     if (password === confirmPassword) {
       onNavigate('terms');
+    } else {
+      alert('비밀번호가 일치하지 않습니다');
     }
   };
 

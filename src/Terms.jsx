@@ -10,9 +10,7 @@ function Terms({ onNavigate }) {
   };
 
   const handleComplete = () => {
-    // 완료 로직
     console.log('약관 동의 완료');
-    // 다음 페이지로 이동하거나 회원가입 완료
   };
 
   return (
