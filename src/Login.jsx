@@ -7,7 +7,10 @@ function Login({ onNavigate }) {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    // 로그인 로직
+    if (!id || !password) {
+      alert('아이디와 비밀번호를 입력하세요');
+      return;
+    }
     console.log('로그인:', { id, password });
   };
 
