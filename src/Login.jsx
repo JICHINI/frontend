@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import Logo from './image/Logo.png'
+import Logo from './image/Logo.png';
 
-function Login({ onNavigate }) {
+function Login() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = () => {
-    // 로그인 로직
     console.log('로그인:', { id, password });
   };
 
@@ -20,7 +21,6 @@ function Login({ onNavigate }) {
           <div className="login-input-group">
             <label className="login-label">아이디</label>
             <div className="login-input-wrapper">
-
               <input
                   type="text"
                   className="login-input-field"
@@ -46,14 +46,14 @@ function Login({ onNavigate }) {
             로그인
           </button>
 
-          <p className="login-link-text" onClick={() => onNavigate('signup')}>
+          <p className="login-link-text" onClick={() => navigate('/signup')}>
             계정이 없으신가요?
           </p>
         </div>
 
         <div className="login-logo-container">
           <div className="login-logo">
-            <img src={Logo} className="login-logo-img"/>
+            <img src={Logo} className="login-logo-img" />
           </div>
         </div>
       </div>

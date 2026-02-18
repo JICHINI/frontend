@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Signup.css';
-import Logo from './image/Logo.png'
+import Logo from './image/Logo.png';
 
-function Signup({ onNavigate }) {
+function Signup() {
   const [name, setName] = useState('');
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSignup = () => {
-    // 회원가입 로직
     console.log('회원가입:', { name, id, password, confirmPassword });
     if (password === confirmPassword) {
-      onNavigate('terms');
+      navigate('/terms');
     }
   };
 
@@ -24,7 +25,6 @@ function Signup({ onNavigate }) {
           <div className="signup-input-group">
             <label className="signup-label">이름</label>
             <div className="signup-input-wrapper">
-
               <input
                   type="text"
                   className="signup-input-field"
@@ -37,7 +37,6 @@ function Signup({ onNavigate }) {
           <div className="signup-input-group">
             <label className="signup-label">아이디</label>
             <div className="signup-input-wrapper">
-
               <input
                   type="text"
                   className="signup-input-field"
@@ -50,7 +49,6 @@ function Signup({ onNavigate }) {
           <div className="signup-input-group">
             <label className="signup-label">비밀번호</label>
             <div className="signup-input-wrapper">
-
               <input
                   type="password"
                   className="signup-input-field"
@@ -63,7 +61,6 @@ function Signup({ onNavigate }) {
           <div className="signup-input-group">
             <label className="signup-label">비밀번호 확인</label>
             <div className="signup-input-wrapper">
-
               <input
                   type="password"
                   className="signup-input-field"
@@ -80,7 +77,7 @@ function Signup({ onNavigate }) {
 
         <div className="signup-logo-container">
           <div className="signup-logo">
-            <img src={Logo} className="signup-logo-img"/>
+            <img src={Logo} className="signup-logo-img" />
           </div>
         </div>
       </div>
