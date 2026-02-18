@@ -67,18 +67,18 @@ function Terms() {
             </div>
           </div>
 
-          <div className="button-group">
-            <button className="cancel-button" onClick={() => navigate('/login')}>
-              취소
-            </button>
-            <button
-                className="complete-button"
-                onClick={handleComplete}
-                disabled={!agreeAll}
-            >
-              회원가입
-            </button>
-          </div>
+        <div className="button-group">
+          <button className="cancel-button" onClick={() => Navigate('login')}>
+            취소
+          </button>
+          <button 
+            className="complete-button" 
+            onClick={handleComplete}
+            disabled={!agreeAll}
+          >
+            다음
+          </button>
+        </div>
         </div>
       </div>
   );
