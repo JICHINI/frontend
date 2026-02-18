@@ -5,15 +5,39 @@ import Logo from './image/Logo.png';
 
 function Signup() {
   const [name, setName] = useState('');
-  const [id, setId] = useState('');
+  const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSignup = () => {
-    console.log('회원가입:', { name, id, password, confirmPassword });
-    if (password === confirmPassword) {
-      navigate('/terms');
+  const handleSignup = async () => {
+    if (!name || !userId || !password || !confirmPassword) {
+      setError('모든 항목을 입력해주세요.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8080/member/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, userId, password }),
+      });
+
+      if (response.ok) {
+        navigate('/terms');
+      } else {
+        setError('이미 존재하는 아이디입니다.');
+      }
+    } catch (e) {
+      setError('서버 연결에 실패했습니다.');
+      console.log(e)
+
     }
   };
 
@@ -25,50 +49,36 @@ function Signup() {
           <div className="signup-input-group">
             <label className="signup-label">이름</label>
             <div className="signup-input-wrapper">
-              <input
-                  type="text"
-                  className="signup-input-field"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-              />
+              <input type="text" className="signup-input-field"
+                     value={name} onChange={(e) => setName(e.target.value)} />
             </div>
           </div>
 
           <div className="signup-input-group">
             <label className="signup-label">아이디</label>
             <div className="signup-input-wrapper">
-              <input
-                  type="text"
-                  className="signup-input-field"
-                  value={id}
-                  onChange={(e) => setId(e.target.value)}
-              />
+              <input type="text" className="signup-input-field"
+                     value={userId} onChange={(e) => setUserId(e.target.value)} />
             </div>
           </div>
 
           <div className="signup-input-group">
             <label className="signup-label">비밀번호</label>
             <div className="signup-input-wrapper">
-              <input
-                  type="password"
-                  className="signup-input-field"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-              />
+              <input type="password" className="signup-input-field"
+                     value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
           </div>
 
           <div className="signup-input-group">
             <label className="signup-label">비밀번호 확인</label>
             <div className="signup-input-wrapper">
-              <input
-                  type="password"
-                  className="signup-input-field"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-              />
+              <input type="password" className="signup-input-field"
+                     value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </div>
           </div>
+
+          {error && <p style={{ color: 'red', fontSize: '13px' }}>{error}</p>}
 
           <button className="signup-submit-button" onClick={handleSignup}>
             다음
