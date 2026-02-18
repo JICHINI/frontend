@@ -131,12 +131,12 @@
 }
 
 .complete-button {
-  background-color: #4FC3F7;
+  background-color: #50B6FF;
   color: white;
 }
 
 .complete-button:hover:not(:disabled) {
-  background-color: #29B6F6;
+  background-color: #1fa1ff;
 }
 
 .complete-button:disabled {

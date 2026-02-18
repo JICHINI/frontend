@@ -13,7 +13,7 @@ function Terms() {
 
   const handleComplete = () => {
     console.log('약관 동의 완료');
-    navigate('/');
+    navigate('/userinfo');
   };
 
   return (
@@ -68,7 +68,7 @@ function Terms() {
           </div>
 
         <div className="button-group">
-          <button className="cancel-button" onClick={() => Navigate('login')}>
+          <button className="cancel-button" onClick={() => navigate('login')}>
             취소
           </button>
           <button 
