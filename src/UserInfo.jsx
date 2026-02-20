@@ -15,19 +15,42 @@ function UserInfo() {
     const navigate = useNavigate();
 
     const handleComplete = async () => {
-        // 빈칸 체크
+
+        const signupData = JSON.parse(sessionStorage.getItem('signupData'));
+        console.log('signupData 확인:', signupData);  // F12 콘솔에서 확인
+
         if (!연령) {
             setError('모든 항목을 입력해주세요.');
             return;
         }
 
         try {
+            const signupData = JSON.parse(sessionStorage.getItem('signupData')); // 1단계에서 저장한 데이터
 
-            alert('회원가입이 완료되었습니다!');
-            navigate('/');
+            const response = await fetch('http://localhost:8080/member/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...signupData,
+                    job: 직업,
+                    location: 거주지,
+                    age: Number(연령),
+                    concern: 고민,
+                    concernDetail: 고민내용,
+                    emotion: 오늘요일,
+                }),
+            });
+
+            if (response.ok) {
+                sessionStorage.removeItem('signupData');
+                alert('회원가입이 완료되었습니다!');
+                navigate('/');
+            } else {
+                setError('회원가입에 실패했습니다.');
+            }
         } catch (e) {
             setError('서버 연결에 실패했습니다.');
-            console.log(e);
+            console.log(e)
         }
     };
 

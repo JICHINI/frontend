@@ -21,24 +21,8 @@ function Signup() {
       setError('비밀번호가 일치하지 않습니다.');
       return;
     }
-
-    try {
-      const response = await fetch('http://localhost:8080/member/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, userId, password }),
-      });
-
-      if (response.ok) {
-        navigate('/terms');
-      } else {
-        setError('이미 존재하는 아이디입니다.');
-      }
-    } catch (e) {
-      setError('서버 연결에 실패했습니다.');
-      console.log(e)
-
-    }
+    sessionStorage.setItem('signupData', JSON.stringify({ name, userId, password }));
+    navigate('/terms');
   };
 
   return (
