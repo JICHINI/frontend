@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Terms.css';
-import Logo from './image/Logo.png';
+import Logo from '../image/Logo.png';
 
 function Terms() {
   const [agreeAll, setAgreeAll] = useState(false);

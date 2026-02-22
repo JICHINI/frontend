@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UserInfo.css';
-import Logo from './image/Logo.png';
+import Logo from '../image/Logo.png';
 
 function UserInfo() {
     const [직업, set직업] = useState('학생');
