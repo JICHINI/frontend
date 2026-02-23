@@ -133,7 +133,7 @@ function History() {
                                 className="history-chat-button"
                                 onClick={() => handleChatClick(user)}
                             >
-                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                <svg  width="28" height="28" viewBox="0 0 28 28" fill="none">
                                     <path d="M26 2L13 15M26 2L18 26L13 15M26 2L2 10L13 15"
                                           stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>

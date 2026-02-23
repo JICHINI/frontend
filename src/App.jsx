@@ -6,6 +6,10 @@ import Terms from './components/Terms';
 import UserInfo from './components/UserInfo';
 import Main from './components/Main';
 import Chat from './components/Chat';
+import Chatroom from './components/Chatroom.jsx';
+import History from './components/History';
+
+
 
 
 import './App.css';
@@ -21,6 +25,10 @@ function App() {
                     <Route path="/userinfo" element={<UserInfo />} />
                     <Route path="/main" element={<Main />} />
                     <Route path="/chat" element={<Chat />} />
+                    <Route path="/chatroom" element={<Chatroom />} />
+
+                    <Route path="/history" element={<History />} />
+
 
                 </Routes>
             </div>
