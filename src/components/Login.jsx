@@ -20,7 +20,7 @@ function Login() {
       if (response.ok) {
         const token = await response.text();
         localStorage.setItem('token', token);  // 토큰 저장
-        navigate('/home');  // 로그인 후 이동할 페이지
+        navigate('/main');  // 로그인 후 이동할 페이지
       } else {
         setError('아이디 또는 비밀번호가 올바르지 않습니다.');
       }
