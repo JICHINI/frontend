@@ -10,7 +10,7 @@ function Main() {
     const handleSendMessage = () => {
         if (message.trim()) {
             // 메시지가 있으면 채팅 페이지로 이동하면서 메시지 전달
-            navigate('/chatbot', { state: { firstMessage: message } });
+            navigate('/chat', { state: { firstMessage: message } });
         }
     };
 

@@ -5,6 +5,8 @@ import Signup from './components/Signup';
 import Terms from './components/Terms';
 import UserInfo from './components/UserInfo';
 import Main from './components/Main';
+import Chat from './components/Chat';
+
 
 import './App.css';
 
@@ -18,6 +20,8 @@ function App() {
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/userinfo" element={<UserInfo />} />
                     <Route path="/main" element={<Main />} />
+                    <Route path="/chat" element={<Chat />} />
+
                 </Routes>
             </div>
         </BrowserRouter>
