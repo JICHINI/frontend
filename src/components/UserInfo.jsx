@@ -5,7 +5,7 @@ import Logo from '../image/Logo.png';
 
 function UserInfo() {
     const [직업, set직업] = useState('학생');
-    const [거주지, set거주지] = useState('서울');
+    const [거주지, set거주지] = useState('');
     const [연령, set연령] = useState('');
     const [고민, set고민] = useState('가정 및 고민은?');
     const [고민내용, set고민내용] = useState('');
@@ -44,7 +44,7 @@ function UserInfo() {
             if (response.ok) {
                 sessionStorage.removeItem('signupData');
                 alert('회원가입이 완료되었습니다!');
-                navigate('/');
+                navigate('/login');
             } else {
                 setError('회원가입에 실패했습니다.');
             }
@@ -87,31 +87,15 @@ function UserInfo() {
                         {/* 거주지 */}
                         <div className="input-group">
                             <label className="input-label">거주지</label>
-                            <select
-                                className="input-select"
+                            <input
+                                type="input"
+                                className="input-input"
+                                placeholder="예시) 경상북도 구미시"
                                 value={거주지}
                                 onChange={(e) => set거주지(e.target.value)}
                             >
-                                <option value="서울">서울</option>
-                                <option value="경기">경기</option>
-                                <option value="인천">인천</option>
-                                <option value="부산">부산</option>
-                                <option value="대구">대구</option>
-                                <option value="광주">광주</option>
-                                <option value="대전">대전</option>
-                                <option value="울산">울산</option>
-                                <option value="세종">세종</option>
-                                <option value="강원">강원</option>
-                                <option value="충북">충북</option>
-                                <option value="충남">충남</option>
-                                <option value="전북">전북</option>
-                                <option value="전남">전남</option>
-                                <option value="경북">경북</option>
-                                <option value="경남">경남</option>
-                                <option value="제주">제주</option>
-                            </select>
+                            </input>
                         </div>
-
                         {/* 연령 */}
                         <div className="input-group">
                             <label className="input-label">연령</label>

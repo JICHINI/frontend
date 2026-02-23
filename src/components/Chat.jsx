@@ -105,6 +105,16 @@ function Chat() {
                         </svg>
                         <span>채팅</span>
                     </div>
+                    <div className="nav-item" onClick={() => navigate('/history')}>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 4H16C17.1 4 18 4.9 18 6V14C18 15.1 17.1 16 16 16H4C2.9 16 2 15.1 2 14V6C2 4.9 2.9 4 4 4Z"
+                                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M18 6L10 11L2 6"
+                                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        <span>조언 내역</span>
+                    </div>
+
                 </nav>
             </aside>
 
