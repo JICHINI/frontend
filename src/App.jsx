@@ -13,6 +13,7 @@ import History from './components/History';
 
 
 import './App.css';
+import MyPage from "./components/MyPage.jsx";
 
 function App() {
     return (
@@ -26,10 +27,8 @@ function App() {
                     <Route path="/main" element={<Main />} />
                     <Route path="/chat" element={<Chat />} />
                     <Route path="/chatroom" element={<Chatroom />} />
-
                     <Route path="/history" element={<History />} />
-
-
+                    <Route path="/mypage" element={<MyPage />} />
                 </Routes>
             </div>
         </BrowserRouter>

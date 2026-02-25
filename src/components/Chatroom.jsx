@@ -1,40 +1,80 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 import './ChatRoom.css';
 import Logo from '../image/Logo.png';
 
 function ChatRoom() {
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
+    const [connected, setConnected] = useState(false);
     const messagesEndRef = useRef(null);
-    const ws = useRef(null);
+    const stompClient = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
 
-    // 상대방 정보 (모달에서 전달받음)
-    const partnerInfo = location.state || {
-        id: 1,
-        name: '박진욱',
-        profile: '👨‍🦰',
-        tags: ['#학생', '#성주 토박이']
+    const { roomId, partnerId, province, city } = location.state || {};
+    const token = localStorage.getItem('token');
+
+    // 내 userId는 JWT에서 파싱 (payload의 sub 필드)
+    const getMyId = () => {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.sub || payload.userId || payload.id || '';
+        } catch {
+            return '';
+        }
     };
+    const myId = getMyId();
 
-    // 컴포넌트 로딩 시 (웹소켓 연결은 나중에)
     useEffect(() => {
-        // TODO: 웹소켓 연결
-        // ws.current = new WebSocket('ws://localhost:8080/chat/room');
+        if (!roomId) return;
 
-        // 더미 메시지
-        setMessages([
-            { sender: 'partner', text: '안녕하세요!', timestamp: new Date() },
-            { sender: 'me', text: '반갑습니다', timestamp: new Date() }
-        ]);
+        // 1) 기존 메시지 기록 불러오기
+        fetch(`http://localhost:8080/rooms/${roomId}/messages`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(r => r.json())
+            .then(data => {
+                setMessages(data.map(m => ({
+                    sender: m.senderId === myId ? 'me' : 'partner',
+                    text: m.content,
+                    timestamp: new Date(m.createdAt)
+                })));
+            })
+            .catch(err => console.error('메시지 기록 오류:', err));
 
-        // 컴포넌트 사라질 때 웹소켓 끊기
+        // 2) STOMP 연결
+        const client = new Client({
+            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            connectHeaders: {
+                Authorization: `Bearer ${token}`
+            },
+            reconnectDelay: 5000,
+            onConnect: () => {
+                setConnected(true);
+                // 채팅방 구독
+                client.subscribe(`/sub/chat/${roomId}`, (frame) => {
+                    const msg = JSON.parse(frame.body);
+                    setMessages(prev => [...prev, {
+                        sender: msg.senderId === myId ? 'me' : 'partner',
+                        text: msg.content,
+                        timestamp: new Date(msg.createdAt)
+                    }]);
+                });
+            },
+            onDisconnect: () => setConnected(false),
+            onStompError: (frame) => console.error('STOMP 오류:', frame)
+        });
+
+        client.activate();
+        stompClient.current = client;
+
         return () => {
-            // ws.current?.close();
+            client.deactivate();
         };
-    }, []);
+    }, [roomId]);
 
     // 스크롤 자동 이동
     useEffect(() => {
@@ -43,23 +83,17 @@ function ChatRoom() {
 
     // 메시지 전송
     const handleSend = () => {
-        if (!inputMessage.trim()) return;
+        if (!inputMessage.trim() || !connected) return;
 
-        const newMessage = {
-            sender: 'me',
-            text: inputMessage,
-            timestamp: new Date()
-        };
+        stompClient.current.publish({
+            destination: `/pub/chat/${roomId}`,
+            body: JSON.stringify({
+                senderId: myId,
+                content: inputMessage.trim()
+            })
+        });
 
-        setMessages(prev => [...prev, newMessage]);
         setInputMessage('');
-
-        // TODO: 웹소켓으로 전송
-        // ws.current?.send(JSON.stringify({
-        //   type: 'message',
-        //   text: inputMessage,
-        //   roomId: partnerInfo.id
-        // }));
     };
 
     const handleKeyPress = (e) => {
@@ -68,6 +102,11 @@ function ChatRoom() {
             handleSend();
         }
     };
+
+    const tags = [
+        province && `#${province}`,
+        city && `#${city}`
+    ].filter(Boolean);
 
     return (
         <div className="chatroom-container">
@@ -116,15 +155,20 @@ function ChatRoom() {
                 {/* 상단 상대방 정보 */}
                 <header className="chatroom-header">
                     <div className="partner-info">
-                        <div className="partner-profile">{partnerInfo.profile}</div>
                         <div className="partner-details">
-                            <h2 className="partner-name">{partnerInfo.name}</h2>
+                            <h2 className="partner-name">{partnerId || '상대방'}</h2>
                             <div className="partner-tags">
-                                {partnerInfo.tags.map((tag, idx) => (
+                                {tags.map((tag, idx) => (
                                     <span key={idx} className="partner-tag">{tag}</span>
                                 ))}
                             </div>
                         </div>
+                        {/* 연결 상태 표시 */}
+                        <div className="connection-status" style={{
+                            width: 8, height: 8, borderRadius: '50%',
+                            background: connected ? '#4CAF50' : '#ccc',
+                            marginLeft: 8, alignSelf: 'center'
+                        }} title={connected ? '연결됨' : '연결 중...'} />
                     </div>
 
                     <button
@@ -161,15 +205,16 @@ function ChatRoom() {
                         <input
                             type="text"
                             className="chatroom-input"
-                            placeholder="메시지를 입력하세요"
+                            placeholder={connected ? "메시지를 입력하세요" : "연결 중..."}
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
+                            disabled={!connected}
                         />
                         <button
                             className="chatroom-send-button"
                             onClick={handleSend}
-                            disabled={!inputMessage.trim()}
+                            disabled={!inputMessage.trim() || !connected}
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 8L11 13"

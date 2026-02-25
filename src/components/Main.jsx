@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Main.css';
 import Logo from '../image/Logo.png';
@@ -7,7 +7,7 @@ function Main() {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
-
+    const [userName, setUserName] = useState('');
 
     const handleSendMessage = () => {
         if (message.trim()) {
@@ -22,6 +22,16 @@ function Main() {
             handleSendMessage();
         }
     };
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        fetch('http://localhost:8080/member/me', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(r => r.json())
+            .then(data => setUserName(data.name))
+            .catch(err => console.error(err));
+    }, []);
 
     return (
         <div className="main-container">
@@ -117,7 +127,7 @@ function Main() {
 
                 {/* 중앙 인사말 */}
                 <div className="welcome-section">
-                    <h1 className="welcome-title">OO님 안녕하세요</h1>
+                    <h1 className="welcome-title">{userName}님 안녕하세요</h1>
                     <p className="welcome-subtitle">오늘 하루는 어떠셨나요?</p>
                 </div>
 

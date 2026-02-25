@@ -6,6 +6,7 @@ import Logo from '../image/Logo.png';
 function UserInfo() {
     const [직업, set직업] = useState('학생');
     const [거주지, set거주지] = useState('');
+    const [시군, set시군] = useState('');
     const [연령, set연령] = useState('');
     const [고민, set고민] = useState('가정 및 고민은?');
     const [고민내용, set고민내용] = useState('');
@@ -33,7 +34,8 @@ function UserInfo() {
                 body: JSON.stringify({
                     ...signupData,
                     job: 직업,
-                    location: 거주지,
+                    province: 거주지,
+                    city: 시군,
                     age: Number(연령),
                     concern: 고민,
                     concernDetail: 고민내용,
@@ -90,9 +92,20 @@ function UserInfo() {
                             <input
                                 type="input"
                                 className="input-input"
-                                placeholder="예시) 경상북도 구미시"
+                                placeholder="예시) 경상북도"
                                 value={거주지}
                                 onChange={(e) => set거주지(e.target.value)}
+                            >
+                            </input>
+                        </div>
+                        <div className="input-group">
+                            <label className="input-label">시/군</label>
+                            <input
+                                type="input"
+                                className="input-input"
+                                placeholder="예시) 구미시"
+                                value={시군}
+                                onChange={(e) => set시군(e.target.value)}
                             >
                             </input>
                         </div>

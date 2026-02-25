@@ -1,55 +1,90 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 import './History.css';
 import Logo from '../image/Logo.png';
 
+const COLORS = ["#FFB347", "#FF7F7F", "#B39DDB", "#50B6FF", "#7FCC7F"];
+const avatarColor = (id) => id ? COLORS[id.charCodeAt(0) % COLORS.length] : COLORS[0];
+
 function History() {
     const navigate = useNavigate();
+    const [rooms, setRooms] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const stompClient = useRef(null);
 
-    // 채팅 내역 더미 데이터 (나중에 백엔드에서 가져올 데이터)
-    const chatHistory = [
-        {
-            id: 1,
-            name: '박진욱',
-            profile: '👨‍🦰',
-            tags: ['#학생', '#성주 토박이'],
-            lastMessage: '감사합니다',
-            timestamp: new Date('2024-02-23T14:30:00')
-        },
-        {
-            id: 2,
-            name: '김성현',
-            profile: '👨',
-            tags: ['#학생', '#성주 토박이'],
-            lastMessage: '네 알겠습니다',
-            timestamp: new Date('2024-02-23T12:15:00')
-        },
-        {
-            id: 3,
-            name: '허재원',
-            profile: '👨',
-            tags: ['#학생', '#성주 토박이'],
-            lastMessage: '좋은 하루 되세요',
-            timestamp: new Date('2024-02-22T18:20:00')
-        },
-        {
-            id: 4,
-            name: '박건욱',
-            profile: '👨',
-            tags: ['#학생', '#성주 토박이'],
-            lastMessage: '도움이 되었어요',
-            timestamp: new Date('2024-02-22T10:05:00')
+    const token = localStorage.getItem('token');
+
+    // 내 userId JWT에서 파싱
+    const getMyId = () => {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.sub || payload.userId || payload.id || '';
+        } catch {
+            return '';
         }
-    ];
+    };
+    const myId = getMyId();
 
-    // 채팅방으로 이동
-    const handleChatClick = (user) => {
+    // 채팅방 목록 로드
+    const loadRooms = () => {
+        fetch('http://localhost:8080/rooms', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(r => r.json())
+            .then(data => {
+                setRooms(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error('채팅방 목록 오류:', err);
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        loadRooms();
+
+        // ✅ WebSocket 연결하여 실시간 알림 수신
+        const client = new Client({
+            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            connectHeaders: {
+                Authorization: `Bearer ${token}`
+            },
+            reconnectDelay: 5000,
+            onConnect: () => {
+                console.log('WebSocket 연결됨');
+                // 내 개인 알림 채널 구독
+                client.subscribe(`/sub/user/${myId}`, (frame) => {
+                    const notification = JSON.parse(frame.body);
+                    if (notification.type === 'NEW_CHAT_REQUEST') {
+                        console.log('새 채팅 요청:', notification);
+                        // 채팅방 목록 새로고침
+                        loadRooms();
+                        // 선택사항: 알림 표시
+                        alert(`${notification.from}님이 대화를 신청했습니다!`);
+                    }
+                });
+            },
+            onStompError: (frame) => console.error('STOMP 오류:', frame)
+        });
+
+        client.activate();
+        stompClient.current = client;
+
+        return () => {
+            client.deactivate();
+        };
+    }, []);
+
+    const handleChatClick = (room) => {
+        // 상대방은 나(myId)가 아닌 쪽
+        const partnerId = room.userA === myId ? room.userB : room.userA;
         navigate('/chatroom', {
             state: {
-                id: user.id,
-                name: user.name,
-                profile: user.profile,
-                tags: user.tags
+                roomId: room.id,
+                partnerId,
             }
         });
     };
@@ -116,30 +151,40 @@ function History() {
 
                 {/* 채팅 목록 */}
                 <div className="history-list">
-                    {chatHistory.map((user) => (
-                        <div key={user.id} className="history-item">
-                            <div className="history-item-content">
-                                <div className="history-profile">{user.profile}</div>
-                                <div className="history-info">
-                                    <h3 className="history-name">{user.name}</h3>
-                                    <div className="history-tags">
-                                        {user.tags.map((tag, idx) => (
-                                            <span key={idx} className="history-tag">{tag}</span>
-                                        ))}
+                    {loading && <p style={{ padding: '2rem', color: '#999' }}>불러오는 중...</p>}
+                    {!loading && rooms.length === 0 && (
+                        <p style={{ padding: '2rem', color: '#999' }}>아직 대화 내역이 없어요</p>
+                    )}
+                    {rooms.map((room) => {
+                        const partnerId = room.userA === myId ? room.userB : room.userA;
+                        return (
+                            <div key={room.id} className="history-item">
+                                <div className="history-item-content">
+                                    {/* 아바타 */}
+                                    <div className="history-profile" style={{
+                                        background: avatarColor(partnerId),
+                                        width: 44, height: 44, borderRadius: '50%',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        color: '#fff', fontWeight: 700, fontSize: 18
+                                    }}>
+                                        {partnerId?.slice(0, 1).toUpperCase()}
+                                    </div>
+                                    <div className="history-info">
+                                        <h3 className="history-name">{partnerId}</h3>
                                     </div>
                                 </div>
+                                <button
+                                    className="history-chat-button"
+                                    onClick={() => handleChatClick(room)}
+                                >
+                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                        <path d="M26 2L13 15M26 2L18 26L13 15M26 2L2 10L13 15"
+                                              stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                </button>
                             </div>
-                            <button
-                                className="history-chat-button"
-                                onClick={() => handleChatClick(user)}
-                            >
-                                <svg  width="28" height="28" viewBox="0 0 28 28" fill="none">
-                                    <path d="M26 2L13 15M26 2L18 26L13 15M26 2L2 10L13 15"
-                                          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                            </button>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </main>
         </div>

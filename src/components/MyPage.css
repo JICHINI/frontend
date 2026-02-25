@@ -1,0 +1,517 @@
+.mypage-container {
+    display: flex;
+    height: 100vh;
+    background-color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* 메인 영역 */
+.mypage-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    overflow-y: auto;
+}
+
+/* 헤더 */
+.mypage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px 60px 50px 60px;
+}
+
+.mypage-title {
+    font-size: 40px;
+    font-weight: 800;
+    color: #000;
+    margin: 0;
+}
+
+.mypage-profile-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+}
+
+.mypage-profile-button:hover {
+    opacity: 0.7;
+}
+
+/* 프로필 카드 */
+.mypage-profile-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 24px;
+    padding: 32px 40px;
+    margin: 0 60px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-image-section {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFC107 0%, #FF5722 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    border: 4px solid white;
+    flex-shrink: 0;
+}
+
+.profile-name-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 8px 16px;
+}
+
+.profile-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+}
+
+/* 👇 여기에 추가 */
+.profile-name-input {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 150px;
+    padding: 0;
+}
+
+.profile-name-input:focus {
+    border-bottom: 2px solid #50B6FF;
+}
+
+.edit-icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s;
+}
+
+.edit-icon-button:hover {
+    opacity: 0.7;
+}
+
+.profile-tags {
+    display: flex;
+    gap: 10px;
+    padding-left: 4px;
+}
+
+.profile-tag-item {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.profile-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.profile-button-secondary,
+.profile-button-primary {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.profile-button-secondary {
+    background-color: white;
+    border: 2px solid #50B6FF;
+    color: #50B6FF;
+}
+
+.profile-button-secondary:hover {
+    background-color: #f0f9ff;
+}
+
+.profile-button-primary {
+    background-color: #50B6FF;
+    color: white;
+}
+
+.profile-button-primary:hover {
+    background-color: #32A9FF;
+}
+
+/* 정보 필드들 */
+.mypage-fields {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 60px;
+    margin-bottom: 40px;
+}
+
+.mypage-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mypage-field.wide {
+    grid-column: span 2;
+}
+
+.mypage-input {
+    flex: 1;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 16px 20px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.mypage-input.editing {
+    border-color: #50B6FF;
+}
+/* textarea 스타일 */
+.mypage-field.wide textarea.mypage-input {
+    resize: vertical;
+    min-height: 80px;
+    max-height: 150px;
+    font-family: inherit;
+}
+
+.field-edit-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    border: 2px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.field-edit-button:hover {
+    border-color: #50B6FF;
+    background-color: #f0f9ff;
+}
+
+
+.mypage-save-button {
+    padding: 16px 60px;
+    background-color: #50B6FF;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    height: 50px;
+}
+
+.mypage-save-button:hover {
+    background-color: #32A9FF;
+}
+
+/* 하단 버튼 */
+.mypage-bottom-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 50px 60px 50px;
+}
+
+.mypage-logout-button,
+.mypage-delete-button {
+    padding: 16px 60px;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mypage-logout-button {
+    background-color: #FF4444;
+    color: white;
+}
+
+.mypage-logout-button:hover {
+    background-color: #E63939;
+}
+
+.mypage-delete-button {
+    background-color: #9E9E9E;
+    color: white;
+}
+
+.mypage-delete-button:hover {
+    background-color: #757575;
+}
+
+/* 반응형 */
+@media (max-width: 1200px) {
+    .mypage-fields {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mypage-field.wide {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .mypage-header {
+        padding: 20px 30px 15px;
+    }
+
+    .mypage-title {
+        font-size: 24px;
+    }
+
+    .mypage-profile-card {
+        flex-direction: column;
+        gap: 24px;
+        margin: 0 30px 20px;
+        padding: 24px;
+    }
+
+    .profile-image-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .profile-button-secondary,
+    .profile-button-primary {
+        width: 100%;
+    }
+
+    .mypage-fields {
+        grid-template-columns: 1fr;
+        padding: 0 30px;
+        gap: 15px;
+    }
+
+    .mypage-field.wide {
+        grid-column: span 1;
+    }
+
+    .mypage-bottom-buttons {
+        flex-direction: column;
+        padding: 20px 30px 40px;
+    }
+
+    .mypage-logout-button,
+    .mypage-delete-button {
+        width: 100%;
+    }
+    .mypage-save-section {
+        padding: 0 30px 15px;
+    }
+
+    .mypage-save-button {
+        width: 100%;
+        padding: 14px;
+    }
+
+    .profile-name-input {
+        width: 120px;
+    }
+}
+/* 태그 변경 모달 */
+.tag-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.tag-modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.tag-modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 24px 0;
+    text-align: center;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    min-height: 60px;
+}
+
+.tag-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #E3F2FD;
+    border: 1px solid #50B6FF;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #333;
+}
+
+.tag-remove-button {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.tag-remove-button:hover {
+    color: #FF4444;
+}
+
+.tag-input-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.tag-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.tag-input:focus {
+    border-color: #50B6FF;
+}
+
+.tag-add-button {
+    padding: 12px 24px;
+    background-color: #50B6FF;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.tag-add-button:hover:not(:disabled) {
+    background-color: #29B6F6;
+}
+
+.tag-add-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.tag-hint {
+    font-size: 13px;
+    color: #666;
+    margin: 0 0 24px 0;
+    text-align: center;
+}
+
+.tag-modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.tag-modal-cancel,
+.tag-modal-save {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tag-modal-cancel {
+    background-color: #e0e0e0;
+    color: #666;
+}
+
+.tag-modal-cancel:hover {
+    background-color: #d0d0d0;
+}
+
+.tag-modal-save {
+    background-color: #50B6FF;
+    color: white;
+}
+
+.tag-modal-save:hover {
+    background-color: #32A9FF;
+}

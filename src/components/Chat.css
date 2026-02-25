@@ -96,9 +96,8 @@
     border: 1px solid #e0e0e0;
     border-radius: 16px;
     padding: 24px;
-    margin: 20px 0;
+    margin: 20px auto;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     animation: slideUp 0.5s ease-out;
 }
 
@@ -125,7 +124,6 @@
     justify-content: center;
     font-size: 24px;
     border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .profile-more {
@@ -161,8 +159,7 @@
 }
 
 .matching-button:hover {
-    background-color: #29B6F6;
-    transform: translateY(-1px);
+    background-color: #32A9FF;
 }
 
 /* 입력창 */
@@ -217,7 +214,6 @@
 
 .chat-send-button:hover:not(:disabled) {
     background-color: #29B6F6;
-    transform: scale(1.05);
 }
 
 .chat-send-button:disabled {
@@ -253,7 +249,6 @@
 
 .modal-profile {
     text-align: center;
-    margin-bottom: 30px;
 }
 
 .modal-profile-img {
@@ -328,7 +323,6 @@
 
 .modal-button-cancel:hover {
     background-color: #757575;
-    transform: translateY(-2px);
 }
 
 .modal-button-chat {
@@ -337,8 +331,7 @@
 }
 
 .modal-button-chat:hover {
-    background-color: #29B6F6;
-    transform: translateY(-2px);
+    background-color: #32A9FF;
 }
 
 /* 모달 화살표 */
