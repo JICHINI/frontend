@@ -78,7 +78,8 @@ function MyPage() {
                 body: JSON.stringify({
                     name: updatedInfo.name,
                     job: updatedInfo.job,
-                    location: updatedInfo.location,
+                    province: updatedInfo.province,  // ← 이거 추가!
+                    city: updatedInfo.city,          // ← 이거 추가!
                     age: parseInt(updatedInfo.age),
                     concern: updatedInfo.concern,
                     concernDetail: updatedInfo.concernDetail,
@@ -89,7 +90,16 @@ function MyPage() {
             });
 
             setUserInfo(updatedInfo);
-            setEditMode({ name: false, job: false, location: false, age: false, concern: false, concernDetail: false, emotion: false });
+            setEditMode({
+                name: false,
+                job: false,
+                province: false,  // ← 이것도!
+                city: false,      // ← 이것도!
+                age: false,
+                concern: false,
+                concernDetail: false,
+                emotion: false
+            });
             alert('정보가 저장되었습니다.');
         } catch (err) {
             console.error('저장 오류:', err);
@@ -175,6 +185,7 @@ function MyPage() {
         localStorage.removeItem('token');
         navigate('/login');
     };
+
 
     // ✅ 회원 탈퇴
     const handleDeleteAccount = async () => {
@@ -278,6 +289,7 @@ function MyPage() {
                 <div className="mypage-fields">
                     {/* 직업 */}
                     <div className="mypage-field">
+                        <p>직업</p>
                         {editMode.job ? (
                             <input type="text" className="mypage-input editing" value={tempValues.job}
                                    onChange={(e) => handleTempChange('job', e.target.value)} autoFocus />
@@ -291,15 +303,57 @@ function MyPage() {
                         </button>
                     </div>
 
-                    {/* 거주지 */}
+                    {/* 거주지 (도) */}
                     <div className="mypage-field">
-                        {editMode.location ? (
-                            <input type="text" className="mypage-input editing" value={tempValues.location}
-                                   onChange={(e) => handleTempChange('location', e.target.value)} autoFocus />
+                        <p>거주지</p>
+                        {editMode.province ? (
+                            <select
+                                className="mypage-input editing"
+                                value={tempValues.province}
+                                onChange={(e) => handleTempChange('province', e.target.value)}
+                                autoFocus
+                            >
+                                <option value="">모든 지역</option>
+                                <option value="서울특별시">서울특별시</option>
+                                <option value="부산광역시">부산광역시</option>
+                                <option value="대구광역시">대구광역시</option>
+                                <option value="인천광역시">인천광역시</option>
+                                <option value="광주광역시">광주광역시</option>
+                                <option value="대전광역시">대전광역시</option>
+                                <option value="울산광역시">울산광역시</option>
+                                <option value="세종특별자치시">세종특별자치시</option>
+                                <option value="경기도">경기도</option>
+                                <option value="강원특별자치도">강원특별자치도</option>
+                                <option value="충청북도">충청북도</option>
+                                <option value="충청남도">충청남도</option>
+                                <option value="전라북도">전라북도</option>
+                                <option value="전라남도">전라남도</option>
+                                <option value="경상북도">경상북도</option>
+                                <option value="경상남도">경상남도</option>
+                                <option value="제주특별자치도">제주특별자치도</option>
+                            </select>
                         ) : (
-                            <div className="mypage-input">{userInfo.location}</div>
+                            <div className="mypage-input">{userInfo.province}</div>
                         )}
-                        <button className="field-edit-button" onClick={() => toggleEdit('location')}>
+                        <button className="field-edit-button" onClick={() => toggleEdit('province')}>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    {/* 시/군 */}
+                    <div className="mypage-field">
+                        <p>시/군</p>
+                        {editMode.city ? (
+                            <input type="text" minLength="5" className="mypage-input editing" value={tempValues.city}
+                                   onChange={(e) => handleTempChange('city', e.target.value)}
+                                   placeholder="예: 구미시"
+                                   autoFocus />
+                        ) : (
+                            <div className="mypage-input">{userInfo.city}</div>
+                        )}
+                        <button className="field-edit-button" onClick={() => toggleEdit('city')}>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -308,6 +362,7 @@ function MyPage() {
 
                     {/* 나이 */}
                     <div className="mypage-field">
+                        <p>나이</p>
                         {editMode.age ? (
                             <input type="text" className="mypage-input editing" value={tempValues.age}
                                    onChange={(e) => handleTempChange('age', e.target.value)} autoFocus />
@@ -320,9 +375,33 @@ function MyPage() {
                             </svg>
                         </button>
                     </div>
-
+                    {/* 기분 */}
+                    <div className="mypage-field">
+                        <p>나의 기분은?</p>
+                        {editMode.emotion ? (
+                            <select
+                                className="mypage-input editing"
+                                onChange={(e) => handleTempChange('emotion', e.target.value)} autoFocus
+                                value={tempValues.emotion}>
+                                <option value="우울함">우울함</option>
+                                <option value="행복함">행복함</option>
+                                <option value="불안함">불안함</option>
+                                <option value="화남">화남</option>
+                                <option value="피곤함">피곤함</option>
+                                <option value="평온함">평온함</option>
+                            </select>
+                        ) : (
+                            <div className="mypage-input">{userInfo.emotion}</div>
+                        )}
+                        <button className="field-edit-button" onClick={() => toggleEdit('emotion')}>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
                     {/* 고민 */}
                     <div className="mypage-field">
+                        <p>고민</p>
                         {editMode.concern ? (
                             <input type="text" className="mypage-input editing" value={tempValues.concern}
                                    onChange={(e) => handleTempChange('concern', e.target.value)} autoFocus />
@@ -338,6 +417,7 @@ function MyPage() {
 
                     {/* 고민 상세 */}
                     <div className="mypage-field wide">
+                        <p>고민을 상세하게 말해주세요!</p>
                         {editMode.concernDetail ? (
                             <textarea className="mypage-input editing" value={tempValues.concernDetail}
                                       onChange={(e) => handleTempChange('concernDetail', e.target.value)} autoFocus rows={3} />
@@ -350,27 +430,10 @@ function MyPage() {
                             </svg>
                         </button>
                     </div>
-
-                    {/* 감정 */}
-                    <div className="mypage-field">
-                        {editMode.emotion ? (
-                            <input type="text" className="mypage-input editing" value={tempValues.emotion}
-                                   onChange={(e) => handleTempChange('emotion', e.target.value)} autoFocus />
-                        ) : (
-                            <div className="mypage-input">{userInfo.emotion}</div>
-                        )}
-                        <button className="field-edit-button" onClick={() => toggleEdit('emotion')}>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                        </button>
-                    </div>
-
                     <div className="mypage-field">
                         <button className="mypage-save-button" onClick={handleSaveAll}>저장</button>
                     </div>
                 </div>
-
                 {/* 하단 버튼 */}
                 <div className="mypage-bottom-buttons">
                     <button className="mypage-logout-button" onClick={handleLogout}>로그아웃</button>

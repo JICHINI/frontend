@@ -8,9 +8,9 @@ function UserInfo() {
     const [거주지, set거주지] = useState('');
     const [시군, set시군] = useState('');
     const [연령, set연령] = useState('');
-    const [고민, set고민] = useState('가정 및 고민은?');
+    const [고민, set고민] = useState('학업/진로');
     const [고민내용, set고민내용] = useState('');
-    const [오늘요일, set오늘요일] = useState('우울함');
+    const [감정, set감정] = useState('우울함');
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
@@ -39,7 +39,7 @@ function UserInfo() {
                     age: Number(연령),
                     concern: 고민,
                     concernDetail: 고민내용,
-                    emotion: 오늘요일,
+                    emotion: 감정,
                 }),
             });
 
@@ -88,15 +88,33 @@ function UserInfo() {
 
                         {/* 거주지 */}
                         <div className="input-group">
-                            <label className="input-label">거주지</label>
-                            <input
-                                type="input"
-                                className="input-input"
-                                placeholder="예시) 경상북도"
-                                value={거주지}
-                                onChange={(e) => set거주지(e.target.value)}
-                            >
-                            </input>
+                            <div className="input-group">
+                                <label className="input-label">거주지</label>
+                                <select
+                                    className="input-select"
+                                    value={거주지}
+                                    onChange={(e) => set거주지(e.target.value)}
+                                >
+                                    <option value="">모든 지역</option>
+                                    <option value="서울특별시">서울특별시</option>
+                                    <option value="부산광역시">부산광역시</option>
+                                    <option value="대구광역시">대구광역시</option>
+                                    <option value="인천광역시">인천광역시</option>
+                                    <option value="광주광역시">광주광역시</option>
+                                    <option value="대전광역시">대전광역시</option>
+                                    <option value="울산광역시">울산광역시</option>
+                                    <option value="세종특별자치시">세종특별자치시</option>
+                                    <option value="경기도">경기도</option>
+                                    <option value="강원특별자치도">강원특별자치도</option>
+                                    <option value="충청북도">충청북도</option>
+                                    <option value="충청남도">충청남도</option>
+                                    <option value="전라북도">전라북도</option>
+                                    <option value="전라남도">전라남도</option>
+                                    <option value="경상북도">경상북도</option>
+                                    <option value="경상남도">경상남도</option>
+                                    <option value="제주특별자치도">제주특별자치도</option>
+                                </select>
+                            </div>
                         </div>
                         <div className="input-group">
                             <label className="input-label">시/군</label>
@@ -126,6 +144,23 @@ function UserInfo() {
                     <div className="userinfo-section">
                         <h2 className="section-title">고민/심리 상태 입력(선택)</h2>
 
+
+                        {/* 나의 오늘 감정은? */}
+                        <div className="input-group">
+                            <label className="input-label">나의 기분은?</label>
+                            <select
+                                className="input-select"
+                                value={감정}
+                                onChange={(e) => set감정(e.target.value)}
+                            >
+                                <option value="우울함">우울함</option>
+                                <option value="행복함">행복함</option>
+                                <option value="불안함">불안함</option>
+                                <option value="화남">화남</option>
+                                <option value="피곤함">피곤함</option>
+                                <option value="평온함">평온함</option>
+                            </select>
+                        </div>
                         {/* 고민 */}
                         <div className="input-group">
                             <label className="input-label">고민</label>
@@ -145,7 +180,7 @@ function UserInfo() {
 
                         {/* 고민을 더 자세히 알려주세요 */}
                         <div className="input-group">
-                            <label className="input-label">고민을 더 자세히 알려주세요</label>
+                            <label className="input-label">고민을 더 자세히 알려주세요!</label>
                             <textarea
                                 className="input-textarea"
                                 placeholder="(선택사항)"
@@ -154,22 +189,7 @@ function UserInfo() {
                             />
                         </div>
 
-                        {/* 나의 오늘 감정은? */}
-                        <div className="input-group">
-                            <label className="input-label">나의 오늘 감정은?</label>
-                            <select
-                                className="input-select"
-                                value={오늘요일}
-                                onChange={(e) => set오늘요일(e.target.value)}
-                            >
-                                <option value="우울함">우울함</option>
-                                <option value="행복함">행복함</option>
-                                <option value="불안함">불안함</option>
-                                <option value="화남">화남</option>
-                                <option value="피곤함">피곤함</option>
-                                <option value="평온함">평온함</option>
-                            </select>
-                        </div>
+
                     </div>
                 </div>
 

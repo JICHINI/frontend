@@ -6,9 +6,31 @@ import Logo from '../image/Logo.png';
 // AI 응답에서 매칭 카드 파싱하는 함수 추가
 function parseMatchCards(text) {
     if (!text) return null;
-    const blocks = text.split(/\n(?=- user_id:)/g).filter(b => b.trim().startsWith("- user_id:"));
-    if (blocks.length === 0) return null;
-    return blocks.map((block) => {
+
+    // 한국어 형식: "- 사용자 ID: ..."
+    const koBlocks = text.split(/\n(?=- 사용자 ID:)/g).filter(b => b.trim().startsWith("- 사용자 ID:"));
+    if (koBlocks.length > 0) {
+        return koBlocks.map((block) => {
+            const get = (key) => {
+                const m = block.match(new RegExp(`- ${key}:\\s*(.+)`));
+                return m ? m[1].trim() : "";
+            };
+            const concernMatch = block.match(/- 고민 내용:\s*([\s\S]*?)(?=\n\n|- 사용자 ID:|$)/);
+            let concern = concernMatch ? concernMatch[1].trim() : "";
+            concern = concern.replace(/^[#\-\s]*고민 내용:\s*/g, "").trim();
+            return {
+                userId: get("사용자 ID"),
+                province: get("시/도"),
+                city: get("시/군"),
+                concern
+            };
+        }).filter(c => c.userId);
+    }
+
+    // 영어 형식(기존): "- user_id: ..."
+    const enBlocks = text.split(/\n(?=- user_id:)/g).filter(b => b.trim().startsWith("- user_id:"));
+    if (enBlocks.length === 0) return null;
+    return enBlocks.map((block) => {
         const get = (key) => {
             const m = block.match(new RegExp(`- ${key}:\\s*(.+)`));
             return m ? m[1].trim() : "";
