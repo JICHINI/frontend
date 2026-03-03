@@ -2,17 +2,39 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Main.css';
 import Logo from '../image/Logo.png';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 function Main() {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
-
     const [userName, setUserName] = useState('');
+    const token = localStorage.getItem('token'); // ✅ 여기서 선언
 
-    const handleSendMessage = () => {
-        if (message.trim()) {
-            // 메시지가 있으면 채팅 페이지로 이동하면서 메시지 전달
-            navigate('/chat', { state: { firstMessage: message } });
+    const handleSendMessage = async () => {
+        try {
+            const res = await fetch(`${BASE_URL}/chat`,  {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            console.log("응답 상태:", res.status);
+            const data = await res.text();
+            console.log("응답 내용:", data);
+
+            if (!res.ok) {
+                console.error("전송 실패!");
+                return; // ✅ 실패하면 navigate 안 함
+            }
+
+            navigate("/chat");
+
+        } catch (err) {
+            console.error("fetch 에러:", err);
         }
     };
 
@@ -24,14 +46,16 @@ function Main() {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        fetch('http://localhost:8080/member/me', {
+        // ✅ useEffect 안에서 token 재선언 제거, 위에 선언한 거 그대로 씀
+        fetch(`${BASE_URL}/member/me`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())
             .then(data => setUserName(data.name))
             .catch(err => console.error(err));
     }, []);
+
+    // ... return 부분은 그대로
 
     return (
         <div className="main-container">

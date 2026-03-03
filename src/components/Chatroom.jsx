@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import './ChatRoom.css';
 import Logo from '../image/Logo.png';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function ChatRoom() {
     const [messages, setMessages] = useState([]);
@@ -32,7 +33,7 @@ function ChatRoom() {
         if (!roomId) return;
 
         // 1) 기존 메시지 기록 불러오기
-        fetch(`http://localhost:8080/rooms/${roomId}/messages`, {
+        fetch(`${BASE_URL}/rooms/${roomId}/messages`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())
@@ -47,7 +48,7 @@ function ChatRoom() {
 
         // 2) STOMP 연결
         const client = new Client({
-            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            webSocketFactory: () => new SockJS(`${BASE_URL}/ws`),
             connectHeaders: {
                 Authorization: `Bearer ${token}`
             },

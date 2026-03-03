@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MyPage.css';
 import Logo from '../image/Logo.png';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 function MyPage() {
     const navigate = useNavigate();
@@ -38,7 +40,7 @@ function MyPage() {
 
     // ✅ 내 정보 불러오기
     useEffect(() => {
-        fetch('http://localhost:8080/member/me', {
+        fetch(`${BASE_URL}/member/me`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())
@@ -69,7 +71,7 @@ function MyPage() {
         });
 
         try {
-            await fetch('http://localhost:8080/member/me', {
+            await fetch(`${BASE_URL}/member/me`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -146,7 +148,7 @@ function MyPage() {
     // ✅ 태그 저장
     const handleSaveTag = async () => {
         try {
-            await fetch('http://localhost:8080/member/me', {
+            await fetch(`${BASE_URL}/member/me`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -191,7 +193,7 @@ function MyPage() {
     const handleDeleteAccount = async () => {
         if (window.confirm('정말로 회원 탈퇴하시겠습니까?')) {
             try {
-                await fetch('http://localhost:8080/member/me', {
+                await fetch(`${BASE_URL}/member/me`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });

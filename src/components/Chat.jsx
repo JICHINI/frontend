@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import './Chat.css';
 import Logo from '../image/Logo.png';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 // AI 응답에서 매칭 카드 파싱하는 함수 추가
 function parseMatchCards(text) {
@@ -69,14 +71,14 @@ function Chat() {
     const [requesting, setRequesting] = useState(false);
     const messagesEndRef = useRef(null);
     const navigate = useNavigate();
-    const location = useLocation();
+    // const location = useLocation();
     const [metUserIds, setMetUserIds] = useState([]);
 
     const token = localStorage.getItem('token');
     const myId = getMyId();
 
     useEffect(() => {
-        fetch('http://localhost:8080/rooms', {
+        fetch(`${BASE_URL}/rooms`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())
@@ -98,11 +100,64 @@ function Chat() {
     };
 
     // AI에게 메시지 보내기
+    // const sendToAI = async (message) => {
+    //     try {
+    //         setMessages(prev => [...prev, { sender: 'bot', text: '...', hasMatching: false, timestamp: new Date() }]);
+    //
+    //         const response = await fetch(`${BASE_URL}/chat`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             body: JSON.stringify({ message })
+    //         });
+    //
+    //         const data = await response.json();
+    //         const answer = data.answer;
+    //         const cards = filterCards(parseMatchCards(answer));
+    //
+    //         setMessages(prev => {
+    //             const updated = [...prev];
+    //             updated[updated.length - 1] = {
+    //                 sender: 'bot',
+    //                 text: answer,
+    //                 hasMatching: cards && cards.length > 0,
+    //                 cards: cards,
+    //                 timestamp: new Date()
+    //             };
+    //
+    //             return updated;
+    //         });
+    //     } catch (error) {
+    //         console.error('AI 연결 오류:', error);
+    //         setMessages(prev => {
+    //             const updated = [...prev];
+    //             updated[updated.length - 1] = {
+    //                 sender: 'bot',
+    //                 text: '죄송합니다. 일시적인 오류가 발생했습니다.',
+    //                 hasMatching: false,
+    //                 timestamp: new Date()
+    //             };
+    //             return updated;
+    //         });
+    //     }
+    // };
     const sendToAI = async (message) => {
-        try {
-            setMessages(prev => [...prev, { sender: 'bot', text: '...', hasMatching: false, timestamp: new Date() }]);
+        console.log("[sendToAI] 시작 - message:", message);
+        console.log("[sendToAI] 현재 messages:", messages);
 
-            const response = await fetch('http://localhost:8080/chat', {
+        try {
+            // 로딩 메시지 추가
+            setMessages(prev => {
+                const newList = [...prev, { sender: 'bot', text: '...', hasMatching: false, timestamp: new Date() }];
+                console.log("[sendToAI] 로딩 메시지 추가 완료:", newList);
+                return newList;
+            });
+
+            console.log("[sendToAI] API 요청 시작 →", `${BASE_URL}/chat`);
+
+            const response = await fetch(`${BASE_URL}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -111,66 +166,100 @@ function Chat() {
                 body: JSON.stringify({ message })
             });
 
+            console.log("[sendToAI] 응답 상태:", response.status, response.ok);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
+            console.log("[sendToAI] 서버 응답 데이터 전체:", data);
+
             const answer = data.answer;
+            console.log("[sendToAI] 추출된 answer:", answer);
+
             const cards = filterCards(parseMatchCards(answer));
+            console.log("[sendToAI] 파싱된 cards:", cards);
+
+            // 최종 bot 메시지 업데이트
+            setMessages(prev => {
+                const updated = [...prev];
+                updated[updated.length - 1] = {
+                    sender: 'bot',
+                    text: answer || '답변을 가져오지 못했습니다.',
+                    hasMatching: !!cards?.length,
+                    cards,
+                    timestamp: new Date()
+                };
+                console.log("[sendToAI] 최종 messages 업데이트:", updated);
+                return updated;
+            });
+
+        } catch (error) {
+            console.error("[sendToAI] 에러 발생:", error);
 
             setMessages(prev => {
                 const updated = [...prev];
                 updated[updated.length - 1] = {
                     sender: 'bot',
-                    text: answer,
-                    hasMatching: cards && cards.length > 0,
-                    cards: cards,
-                    timestamp: new Date()
-                };
-                return updated;
-            });
-        } catch (error) {
-            console.error('AI 연결 오류:', error);
-            setMessages(prev => {
-                const updated = [...prev];
-                updated[updated.length - 1] = {
-                    sender: 'bot',
-                    text: '죄송합니다. 일시적인 오류가 발생했습니다.',
+                    text: '죄송합니다. 연결에 문제가 생겼습니다.',
                     hasMatching: false,
                     timestamp: new Date()
                 };
+                console.log("[sendToAI] 에러 처리 후 messages:", updated);
                 return updated;
             });
         }
     };
 
-    // 초기 로드: 히스토리 불러오기
+
     useEffect(() => {
         const init = async () => {
-            const firstMessage = location.state?.firstMessage;
+
+            // ⭐ localStorage에서 가져오기
+            const firstMessage = localStorage.getItem("firstMessage");
 
             try {
-                const res = await fetch('http://localhost:8080/chat/history', {
-                    headers: { 'Authorization': `Bearer ${token}` }
+                const res = await fetch(`${BASE_URL}/chat/history`, {
+                    headers: { Authorization: `Bearer ${token}` }
                 });
+
+                if (!res.ok) throw new Error("history fetch failed");
+
                 const history = await res.json();
 
-                if (history.length > 0) {
-                    setMessages(history.map(h => {
-                        const cards = h.sender === 'bot' ? filterCards(parseMatchCards(h.content)) : null;
-                        return {
-                            sender: h.sender,
-                            text: h.content,
-                            hasMatching: cards && cards.length > 0,
-                            cards: cards,
-                            timestamp: new Date(h.createdAt)
-                        };
-                    }));
-                } else if (firstMessage) {
-                    setMessages([{ sender: 'user', text: firstMessage, hasMatching: false, timestamp: new Date() }]);
+                let initialMessages = Array.isArray(history)
+                    ? history.map(h => ({
+                        sender: h.sender,
+                        text: h.content,
+                        timestamp: new Date(h.createdAt)
+                    }))
+                    : [];
+
+                setMessages(initialMessages);
+
+                // ⭐ 히스토리 없고 firstMessage 있을 때
+                if (firstMessage && initialMessages.length === 0) {
+
+                    const userMsg = {
+                        sender: "user",
+                        text: firstMessage,
+                        timestamp: new Date()
+                    };
+
+                    setMessages([userMsg]);
+
                     await sendToAI(firstMessage);
+
+                    // ⭐ 사용 후 삭제
+                    localStorage.removeItem("firstMessage");
                 }
+
             } catch (err) {
-                console.error('히스토리 로드 오류:', err);
+                console.error("히스토리 로드 오류:", err);
             }
         };
+
         init();
     }, []);
 
@@ -235,7 +324,7 @@ function Chat() {
         setRequesting(true);
 
         try {
-            const res = await fetch('http://localhost:8080/rooms', {
+            const res = await fetch(`${BASE_URL}/rooms`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

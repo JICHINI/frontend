@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import './History.css';
 import Logo from '../image/Logo.png';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const COLORS = ["#FFB347", "#FF7F7F", "#B39DDB", "#50B6FF", "#7FCC7F"];
 const avatarColor = (id) => id ? COLORS[id.charCodeAt(0) % COLORS.length] : COLORS[0];
@@ -29,7 +30,7 @@ function History() {
 
     // 채팅방 목록 로드
     const loadRooms = () => {
-        fetch('http://localhost:8080/rooms', {
+        fetch(`${BASE_URL}/rooms`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())
@@ -48,7 +49,7 @@ function History() {
 
         // ✅ WebSocket 연결하여 실시간 알림 수신
         const client = new Client({
-            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            webSocketFactory: () => new SockJS(`${BASE_URL}/ws`),
             connectHeaders: {
                 Authorization: `Bearer ${token}`
             },

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UserInfo.css';
 import Logo from '../image/Logo.png';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function UserInfo() {
     const [직업, set직업] = useState('학생');
@@ -28,7 +29,7 @@ function UserInfo() {
         try {
             const signupData = JSON.parse(sessionStorage.getItem('signupData')); // 1단계에서 저장한 데이터
 
-            const response = await fetch('http://localhost:8080/member/create', {
+            const response = await fetch(`${BASE_URL}/member/create`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
