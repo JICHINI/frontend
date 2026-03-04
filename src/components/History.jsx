@@ -6,8 +6,6 @@ import './History.css';
 import Logo from '../image/Logo.png';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const COLORS = ["#FFB347", "#FF7F7F", "#B39DDB", "#50B6FF", "#7FCC7F"];
-const avatarColor = (id) => id ? COLORS[id.charCodeAt(0) % COLORS.length] : COLORS[0];
 
 function History() {
     const navigate = useNavigate();
@@ -34,8 +32,22 @@ function History() {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())
-            .then(data => {
-                setRooms(data);
+            .then(async data => {
+                // ✅ 각 방의 상대방 프로필 이미지 가져오기
+                const enriched = await Promise.all(data.map(async room => {
+                    const partnerId = room.userA === myId ? room.userB : room.userA;
+                    try {
+                        const res = await fetch(`${BASE_URL}/member/profile/${partnerId}`, {
+                            headers: { Authorization: `Bearer ${token}` }
+                        });
+                        if (res.ok) {
+                            const profile = await res.json();
+                            return { ...room, profileImage: profile.profileImage };
+                        }
+                    } catch (err) { console.error(err); }
+                    return room;
+                }));
+                setRooms(enriched);
                 setLoading(false);
             })
             .catch(err => {
@@ -163,12 +175,13 @@ function History() {
                                 <div className="history-item-content">
                                     {/* 아바타 */}
                                     <div className="history-profile" style={{
-                                        background: avatarColor(partnerId),
                                         width: 44, height: 44, borderRadius: '50%',
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        color: '#fff', fontWeight: 700, fontSize: 18
+                                        overflow: 'hidden'
                                     }}>
-                                        {partnerId?.slice(0, 1).toUpperCase()}
+                                        {room.profileImage
+                                            ? <img src={room.profileImage} alt="프로필" style={{width:'100%', height:'100%', objectFit:'cover'}} />
+                                            : ''
+                                        }
                                     </div>
                                     <div className="history-info">
                                         <h3 className="history-name">{partnerId}</h3>

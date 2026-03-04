@@ -145,7 +145,7 @@ function MyPage() {
         setTempTags(tempTags.filter((_, idx) => idx !== index));
     };
 
-    // ✅ 태그 저장
+    //  태그 저장
     const handleSaveTag = async () => {
         try {
             await fetch(`${BASE_URL}/member/me`, {

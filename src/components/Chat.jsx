@@ -51,7 +51,6 @@ function parseMatchCards(text) {
 
 // 아바타 색상
 const COLORS = ["#FFB347", "#FF7F7F", "#B39DDB", "#50B6FF", "#7FCC7F"];
-const avatarColor = (id) => id ? COLORS[id.charCodeAt(0) % COLORS.length] : COLORS[0];
 
 // 내 userId JWT에서 파싱
 const getMyId = () => {
@@ -229,10 +228,36 @@ function Chat() {
                 const history = await res.json();
 
                 let initialMessages = Array.isArray(history)
-                    ? history.map(h => ({
-                        sender: h.sender,
-                        text: h.content,
-                        timestamp: new Date(h.createdAt)
+                    ? await Promise.all(history.map(async h => {
+                        if (h.sender === 'bot') {
+                            const cards = filterCards(parseMatchCards(h.content));
+                            // ✅ 카드 있으면 프로필 이미지도 가져오기
+                            const enrichedCards = cards ? await Promise.all(cards.map(async (card) => {
+                                try {
+                                    const res = await fetch(`${BASE_URL}/member/profile/${card.userId}`, {
+                                        headers: { Authorization: `Bearer ${token}` }
+                                    });
+                                    if (res.ok) {
+                                        const data = await res.json();
+                                        return { ...card, profileImage: data.profileImage };
+                                    }
+                                } catch (err) { console.error('프로필 로드 실패:', err); }
+                                return card;
+                            })) : null;
+
+                            return {
+                                sender: h.sender,
+                                text: h.content,
+                                hasMatching: !!enrichedCards?.length,
+                                cards: enrichedCards,
+                                timestamp: new Date(h.createdAt)
+                            };
+                        }
+                        return {
+                            sender: h.sender,
+                            text: h.content,
+                            timestamp: new Date(h.createdAt)
+                        };
                     }))
                     : [];
 
@@ -292,9 +317,23 @@ function Chat() {
         }
     };
 
-    // 모달 열기
-    const handleOpenModal = (cards) => {
-        setMatchedUsers(cards);
+    // 모달 열기 - 프로필 이미지 함께 가져오기
+    const handleOpenModal = async (cards) => {
+        // 각 유저의 프로필 이미지 가져오기
+        const enriched = await Promise.all(cards.map(async (card) => {
+            try {
+                const res = await fetch(`${BASE_URL}/member/profile/${card.userId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    return { ...card, profileImage: data.profileImage };
+                }
+            } catch (err){console.error('프로필 로드 실패:', err);}
+            return card; // 실패하면 그냥 원래 카드 사용
+        }));
+
+        setMatchedUsers(enriched);
         setCurrentUserIndex(0);
         setShowModal(true);
     };
@@ -425,12 +464,11 @@ function Chat() {
                                     <div className="matching-card">
                                         <div className="matching-profiles">
                                             {msg.cards.slice(0, 3).map((card, i) => (
-                                                <div
-                                                    key={i}
-                                                    className="profile-icon"
-                                                    style={{ background: avatarColor(card.userId) }}
-                                                >
-                                                    {card.userId?.slice(0, 1).toUpperCase()}
+                                                <div key={i} className="profile-icon">
+                                                    {card.profileImage
+                                                        ? <img src={card.profileImage} alt="프로필" style={{width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover'}} />
+                                                        : ''
+                                                    }
                                                 </div>
                                             ))}
                                             {msg.cards.length > 3 && (
@@ -492,11 +530,11 @@ function Chat() {
                 <div className="modal-overlay" onClick={handleCloseModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-profile">
-                            <div
-                                className="modal-profile-img"
-                                style={{ background: avatarColor(currentUser.userId) }}
-                            >
-                                {currentUser.userId?.slice(0, 1).toUpperCase()}
+                            <div className="modal-profile-img">
+                                {currentUser.profileImage
+                                    ? <img src={currentUser.profileImage} alt="프로필" style={{width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover'}} />
+                                    : ''
+                                }
                             </div>
                             <h2 className="modal-name">{currentUser.userId}</h2>
                             <div className="modal-tags">
