@@ -49,7 +49,12 @@ function ChatRoom() {
     useEffect(() => {
         if (!roomId) return;
 
-        // 1) 기존 메시지 기록 불러오기
+        // 🔥 입장 시 읽음 처리
+        fetch(`${BASE_URL}/rooms/${roomId}/read`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
         fetch(`${BASE_URL}/rooms/${roomId}/messages`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
@@ -60,19 +65,14 @@ function ChatRoom() {
                     text: m.content,
                     timestamp: new Date(m.createdAt)
                 })));
-            })
-            .catch(err => console.error('메시지 기록 오류:', err));
+            });
 
-        // 2) STOMP 연결
         const client = new Client({
             webSocketFactory: () => new SockJS(`${BASE_URL}/ws`),
-            connectHeaders: {
-                Authorization: `Bearer ${token}`
-            },
+            connectHeaders: { Authorization: `Bearer ${token}` },
             reconnectDelay: 5000,
             onConnect: () => {
                 setConnected(true);
-                // 채팅방 구독
                 client.subscribe(`/sub/chat/${roomId}`, (frame) => {
                     const msg = JSON.parse(frame.body);
                     setMessages(prev => [...prev, {
@@ -80,6 +80,14 @@ function ChatRoom() {
                         text: msg.content,
                         timestamp: new Date(msg.createdAt)
                     }]);
+
+                    // 🔥 상대방 메시지 오면 즉시 읽음 처리
+                    if (msg.senderId !== myId) {
+                        fetch(`${BASE_URL}/rooms/${roomId}/read`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                    }
                 });
             },
             onDisconnect: () => setConnected(false),
@@ -88,10 +96,7 @@ function ChatRoom() {
 
         client.activate();
         stompClient.current = client;
-
-        return () => {
-            client.deactivate();
-        };
+        return () => { client.deactivate(); };
     }, [roomId]);
 
     // 스크롤 자동 이동

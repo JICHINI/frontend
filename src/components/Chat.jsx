@@ -1,5 +1,7 @@
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import { useNavigate} from 'react-router-dom';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 import './Chat.css';
 import Logo from '../image/Logo.png';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -9,7 +11,6 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 function parseMatchCards(text) {
     if (!text) return null;
 
-    // 한국어 형식: "- 사용자 ID: ..."
     const koBlocks = text.split(/\n(?=- 사용자 ID:)/g).filter(b => b.trim().startsWith("- 사용자 ID:"));
     if (koBlocks.length > 0) {
         return koBlocks.map((block) => {
@@ -17,19 +18,19 @@ function parseMatchCards(text) {
                 const m = block.match(new RegExp(`- ${key}:\\s*(.+)`));
                 return m ? m[1].trim() : "";
             };
-            const concernMatch = block.match(/- 고민 내용:\s*([\s\S]*?)(?=\n\n|- 사용자 ID:|$)/);
-            let concern = concernMatch ? concernMatch[1].trim() : "";
-            concern = concern.replace(/^[#\-\s]*고민 내용:\s*/g, "").trim();
+            const concernMatch = block.match(/- 고민:\s*(.+)/);
+            const detailMatch = block.match(/- 상세 고민:\s*([\s\S]*?)(?=\n\n|- 사용자 ID:|$)/);
+
             return {
                 userId: get("사용자 ID"),
                 province: get("시/도"),
                 city: get("시/군"),
-                concern
+                concern: concernMatch ? concernMatch[1].trim() : "",
+                concernDetail: detailMatch ? detailMatch[1].trim() : "",
             };
         }).filter(c => c.userId);
     }
 
-    // 영어 형식(기존): "- user_id: ..."
     const enBlocks = text.split(/\n(?=- user_id:)/g).filter(b => b.trim().startsWith("- user_id:"));
     if (enBlocks.length === 0) return null;
     return enBlocks.map((block) => {
@@ -37,14 +38,14 @@ function parseMatchCards(text) {
             const m = block.match(new RegExp(`- ${key}:\\s*(.+)`));
             return m ? m[1].trim() : "";
         };
-        const concernMatch = block.match(/- 고민 내용:\s*([\s\S]*?)(?=\n\n|$)/);
-        let concern = concernMatch ? concernMatch[1].trim() : "";
-        concern = concern.replace(/^[#\-\s]*고민 내용:\s*/g, "").trim();
+        const concernMatch = block.match(/- 고민:\s*(.+)/);
+        const detailMatch = block.match(/- 상세 고민:\s*([\s\S]*?)(?=\n\n|$)/);
+
         return {
             userId: get("user_id"),
-            province: get("province"),
-            city: get("city"),
-            concern
+            tags : get("tags"),
+            concern: concernMatch ? concernMatch[1].trim() : "",
+            concernDetail: detailMatch ? detailMatch[1].trim() : "",
         };
     }).filter(c => c.userId);
 }
@@ -68,9 +69,9 @@ function Chat() {
     const [currentUserIndex, setCurrentUserIndex] = useState(0);
     const [matchedUsers, setMatchedUsers] = useState([]);
     const [requesting, setRequesting] = useState(false);
+    const [totalUnread, setTotalUnread] = useState(0);
     const messagesEndRef = useRef(null);
     const navigate = useNavigate();
-    // const location = useLocation();
     const [metUserIds, setMetUserIds] = useState([]);
 
     const token = localStorage.getItem('token');
@@ -91,6 +92,37 @@ function Chat() {
             });
     }, []);
 
+    // 🔥 실시간 unread WebSocket
+    useEffect(() => {
+        fetch(`${BASE_URL}/rooms/unread/total`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(r => r.json())
+            .then(data => setTotalUnread(data.unread || 0));
+
+        const client = new Client({
+            webSocketFactory: () => new SockJS(`${BASE_URL}/ws`),
+            connectHeaders: { Authorization: `Bearer ${token}` },
+            reconnectDelay: 5000,
+            onConnect: () => {
+                client.subscribe(`/sub/user/${myId}`, (frame) => {
+                    const notification = JSON.parse(frame.body);
+                    if (notification.type === 'NEW_MESSAGE' || notification.type === 'READ') {
+                        fetch(`${BASE_URL}/rooms/unread/total`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        })
+                            .then(r => r.json())
+                            .then(data => setTotalUnread(data.unread || 0));
+                    }
+                });
+            },
+            onStompError: (frame) => console.error('STOMP 오류:', frame)
+        });
+
+        client.activate();
+        return () => { client.deactivate(); };
+    }, []);
+
     // 카드에서 내 ID 필터링 및 이미 매칭되서 채팅방있는 사람들 필터
     const filterCards = useCallback((cards) => {
         if (!cards) return null;
@@ -100,56 +132,11 @@ function Chat() {
         return filtered.length > 0 ? filtered : null;
     }, [metUserIds, myId]);
 
-    // AI에게 메시지 보내기
-    // const sendToAI = async (message) => {
-    //     try {
-    //         setMessages(prev => [...prev, { sender: 'bot', text: '...', hasMatching: false, timestamp: new Date() }]);
-    //
-    //         const response = await fetch(`${BASE_URL}/chat`, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${token}`
-    //             },
-    //             body: JSON.stringify({ message })
-    //         });
-    //
-    //         const data = await response.json();
-    //         const answer = data.answer;
-    //         const cards = filterCards(parseMatchCards(answer));
-    //
-    //         setMessages(prev => {
-    //             const updated = [...prev];
-    //             updated[updated.length - 1] = {
-    //                 sender: 'bot',
-    //                 text: answer,
-    //                 hasMatching: cards && cards.length > 0,
-    //                 cards: cards,
-    //                 timestamp: new Date()
-    //             };
-    //
-    //             return updated;
-    //         });
-    //     } catch (error) {
-    //         console.error('AI 연결 오류:', error);
-    //         setMessages(prev => {
-    //             const updated = [...prev];
-    //             updated[updated.length - 1] = {
-    //                 sender: 'bot',
-    //                 text: '죄송합니다. 일시적인 오류가 발생했습니다.',
-    //                 hasMatching: false,
-    //                 timestamp: new Date()
-    //             };
-    //             return updated;
-    //         });
-    //     }
-    // };
     const sendToAI = async (message) => {
         console.log("[sendToAI] 시작 - message:", message);
         console.log("[sendToAI] 현재 messages:", messages);
 
         try {
-            // 로딩 메시지 추가
             setMessages(prev => {
                 const newList = [...prev, { sender: 'bot', text: '...', hasMatching: false, timestamp: new Date() }];
                 console.log("[sendToAI] 로딩 메시지 추가 완료:", newList);
@@ -182,7 +169,6 @@ function Chat() {
             const cards = filterCards(parseMatchCards(answer));
             console.log("[sendToAI] 파싱된 cards:", cards);
 
-            // 최종 bot 메시지 업데이트
             setMessages(prev => {
                 const updated = [...prev];
                 updated[updated.length - 1] = {
@@ -217,7 +203,6 @@ function Chat() {
     useEffect(() => {
         const init = async () => {
 
-            // ⭐ localStorage에서 가져오기
             const firstMessage = localStorage.getItem("firstMessage");
 
             try {
@@ -233,7 +218,6 @@ function Chat() {
                     ? await Promise.all(history.map(async h => {
                         if (h.sender === 'bot') {
                             const cards = filterCards(parseMatchCards(h.content));
-                            // ✅ 카드 있으면 프로필 이미지도 가져오기
                             const enrichedCards = cards ? await Promise.all(cards.map(async (card) => {
                                 try {
                                     const res = await fetch(`${BASE_URL}/member/profile/${card.userId}`, {
@@ -265,7 +249,6 @@ function Chat() {
 
                 setMessages(initialMessages);
 
-                // ⭐ 히스토리 없고 firstMessage 있을 때
                 if (firstMessage && initialMessages.length === 0) {
 
                     const userMsg = {
@@ -278,7 +261,6 @@ function Chat() {
 
                     await sendToAI(firstMessage);
 
-                    // ⭐ 사용 후 삭제
                     localStorage.removeItem("firstMessage");
                 }
 
@@ -290,12 +272,10 @@ function Chat() {
         init();
     }, []);
 
-    // 스크롤 자동 이동
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    // 메시지 전송
     const handleSend = async () => {
         if (!inputMessage.trim()) return;
 
@@ -319,9 +299,7 @@ function Chat() {
         }
     };
 
-    // 모달 열기 - 프로필 이미지 함께 가져오기
     const handleOpenModal = async (cards) => {
-        // 각 유저의 프로필 이미지 가져오기
         const enriched = await Promise.all(cards.map(async (card) => {
             try {
                 const res = await fetch(`${BASE_URL}/member/profile/${card.userId}`, {
@@ -332,7 +310,7 @@ function Chat() {
                     return { ...card, profileImage: data.profileImage };
                 }
             } catch (err){console.error('프로필 로드 실패:', err);}
-            return card; // 실패하면 그냥 원래 카드 사용
+            return card;
         }));
 
         setMatchedUsers(enriched);
@@ -340,17 +318,14 @@ function Chat() {
         setShowModal(true);
     };
 
-    // 모달 닫기
     const handleCloseModal = () => {
         setShowModal(false);
     };
 
-    // 다음 사용자
     const handleNextUser = () => {
         setCurrentUserIndex((prev) => (prev + 1) % matchedUsers.length);
     };
 
-    // 이전 사용자
     const handlePrevUser = () => {
         setCurrentUserIndex((prev) =>
             prev === 0 ? matchedUsers.length - 1 : prev - 1
@@ -359,7 +334,6 @@ function Chat() {
 
     const currentUser = matchedUsers[currentUserIndex];
 
-    // 대화 신청 → 채팅방 생성
     const handleChatRequest = async () => {
         if (!currentUser || requesting) return;
         setRequesting(true);
@@ -423,7 +397,7 @@ function Chat() {
                         </svg>
                         <span>채팅</span>
                     </div>
-                    <div className="nav-item" onClick={() => navigate('/history')}>
+                    <div className="nav-item" onClick={() => navigate('/history')} style={{ position: 'relative' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M4 4H16C17.1 4 18 4.9 18 6V14C18 15.1 17.1 16 16 16H4C2.9 16 2 15.1 2 14V6C2 4.9 2.9 4 4 4Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -431,6 +405,18 @@ function Chat() {
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                         <span>조언 내역</span>
+                        {totalUnread > 0 && (
+                            <span style={{
+                                position: 'absolute', top: 4, right: 4,
+                                background: '#FF4444', color: 'white',
+                                borderRadius: '50%', fontSize: 11,
+                                minWidth: 18, height: 18,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                padding: '0 4px'
+                            }}>
+                                {totalUnread > 99 ? '99+' : totalUnread}
+                            </span>
+                        )}
                     </div>
                 </nav>
             </aside>
@@ -540,14 +526,24 @@ function Chat() {
                             </div>
                             <h2 className="modal-name">{currentUser.userId}</h2>
                             <div className="modal-tags">
-                                {currentUser.province && (
-                                    <span className="modal-tag">#{currentUser.province}</span>
-                                )}
-                                {currentUser.city && (
-                                    <span className="modal-tag">#{currentUser.city}</span>
+                                {currentUser.tags && (
+                                    <span className="modal-tag">{currentUser.tags}</span>
                                 )}
                             </div>
-                            <p className="modal-description">{currentUser.concern}</p>
+
+                            {/* 🔥 고민 / 상세고민 분리 */}
+                            <div className="modal-concern">
+                                {currentUser.concern && (
+                                    <p className="modal-description">
+                                        <strong style={{ fontSize: '18px' }}>고민 : </strong> {currentUser.concern}
+                                    </p>
+                                )}
+                                {currentUser.concernDetail && (
+                                    <p className="modal-description">
+                                        <strong style={{ fontSize: '18px' }}>상세고민 : </strong> {currentUser.concernDetail}
+                                    </p>
+                                )}
+                            </div>
                         </div>
 
                         <div className="modal-buttons">

@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 import './Main.css';
 import Logo from '../image/Logo.png';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -9,7 +11,16 @@ function Main() {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
     const [userName, setUserName] = useState('');
-    const token = localStorage.getItem('token'); // ✅ 여기서 선언
+    const [totalUnread, setTotalUnread] = useState(0);
+    const token = localStorage.getItem('token');
+
+    const getMyId = () => {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.sub || payload.userId || payload.id || '';
+        } catch { return ''; }
+    };
+    const myId = getMyId();
 
     const handleSendMessage = async () => {
         try {
@@ -28,7 +39,7 @@ function Main() {
 
             if (!res.ok) {
                 console.error("전송 실패!");
-                return; // ✅ 실패하면 navigate 안 함
+                return;
             }
 
             navigate("/chat");
@@ -46,7 +57,6 @@ function Main() {
     };
 
     useEffect(() => {
-        // ✅ useEffect 안에서 token 재선언 제거, 위에 선언한 거 그대로 씀
         fetch(`${BASE_URL}/member/me`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
@@ -55,7 +65,36 @@ function Main() {
             .catch(err => console.error(err));
     }, []);
 
-    // ... return 부분은 그대로
+    // 🔥 실시간 unread WebSocket
+    useEffect(() => {
+        fetch(`${BASE_URL}/rooms/unread/total`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(r => r.json())
+            .then(data => setTotalUnread(data.unread || 0));
+
+        const client = new Client({
+            webSocketFactory: () => new SockJS(`${BASE_URL}/ws`),
+            connectHeaders: { Authorization: `Bearer ${token}` },
+            reconnectDelay: 5000,
+            onConnect: () => {
+                client.subscribe(`/sub/user/${myId}`, (frame) => {
+                    const notification = JSON.parse(frame.body);
+                    if (notification.type === 'NEW_MESSAGE' || notification.type === 'READ') {
+                        fetch(`${BASE_URL}/rooms/unread/total`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        })
+                            .then(r => r.json())
+                            .then(data => setTotalUnread(data.unread || 0));
+                    }
+                });
+            },
+            onStompError: (frame) => console.error('STOMP 오류:', frame)
+        });
+
+        client.activate();
+        return () => { client.deactivate(); };
+    }, []);
 
     return (
         <div className="main-container">
@@ -108,7 +147,7 @@ function Main() {
                         </svg>
                         <span>채팅</span>
                     </div>
-                    <div className="nav-item" onClick={() => navigate('/history')}>
+                    <div className="nav-item" onClick={() => navigate('/history')} style={{ position: 'relative' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M4 4H16C17.1 4 18 4.9 18 6V14C18 15.1 17.1 16 16 16H4C2.9 16 2 15.1 2 14V6C2 4.9 2.9 4 4 4Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -116,6 +155,18 @@ function Main() {
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                         <span>조언 내역</span>
+                        {totalUnread > 0 && (
+                            <span style={{
+                                position: 'absolute', top: 4, right: 4,
+                                background: '#FF4444', color: 'white',
+                                borderRadius: '50%', fontSize: 11,
+                                minWidth: 18, height: 18,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                padding: '0 4px'
+                            }}>
+                                {totalUnread > 99 ? '99+' : totalUnread}
+                            </span>
+                        )}
                     </div>
                 </nav>
             </aside>

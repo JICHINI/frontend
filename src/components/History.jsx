@@ -11,11 +11,12 @@ function History() {
     const navigate = useNavigate();
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [unreadMap, setUnreadMap] = useState({});
+    const [totalUnread, setTotalUnread] = useState(0);
     const stompClient = useRef(null);
 
     const token = localStorage.getItem('token');
 
-    // 내 userId JWT에서 파싱
     const getMyId = () => {
         try {
             const payload = JSON.parse(atob(token.split('.')[1]));
@@ -26,14 +27,12 @@ function History() {
     };
     const myId = getMyId();
 
-    // 채팅방 목록 로드
     const loadRooms = () => {
         fetch(`${BASE_URL}/rooms`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())
             .then(async data => {
-                // ✅ 각 방의 상대방 프로필 이미지 가져오기
                 const enriched = await Promise.all(data.map(async room => {
                     const partnerId = room.userA === myId ? room.userB : room.userA;
                     try {
@@ -56,27 +55,38 @@ function History() {
             });
     };
 
+    const loadUnread = () => {
+        fetch(`${BASE_URL}/rooms/unread`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(r => r.json())
+            .then(data => {
+                setUnreadMap(data);
+                const total = Object.values(data).reduce((a, b) => a + b, 0);
+                setTotalUnread(Math.min(total, 99));
+            });
+    };
+
     useEffect(() => {
         loadRooms();
+        loadUnread();
 
-        // ✅ WebSocket 연결하여 실시간 알림 수신
         const client = new Client({
             webSocketFactory: () => new SockJS(`${BASE_URL}/ws`),
-            connectHeaders: {
-                Authorization: `Bearer ${token}`
-            },
+            connectHeaders: { Authorization: `Bearer ${token}` },
             reconnectDelay: 5000,
             onConnect: () => {
-                console.log('WebSocket 연결됨');
-                // 내 개인 알림 채널 구독
                 client.subscribe(`/sub/user/${myId}`, (frame) => {
                     const notification = JSON.parse(frame.body);
                     if (notification.type === 'NEW_CHAT_REQUEST') {
-                        console.log('새 채팅 요청:', notification);
-                        // 채팅방 목록 새로고침
                         loadRooms();
-                        // 선택사항: 알림 표시
                         alert(`${notification.from}님이 대화를 신청했습니다!`);
+                    }
+                    if (notification.type === 'READ') {
+                        loadUnread();
+                    }
+                    if (notification.type === 'NEW_MESSAGE') {
+                        loadUnread();
                     }
                 });
             },
@@ -85,14 +95,10 @@ function History() {
 
         client.activate();
         stompClient.current = client;
-
-        return () => {
-            client.deactivate();
-        };
+        return () => { client.deactivate(); };
     }, []);
 
     const handleChatClick = (room) => {
-        // 상대방은 나(myId)가 아닌 쪽
         const partnerId = room.userA === myId ? room.userB : room.userA;
         navigate('/chatroom', {
             state: {
@@ -132,7 +138,8 @@ function History() {
                         <span>채팅</span>
                     </div>
 
-                    <div className="nav-item active">
+                    {/* 🔥 조언 내역 + 전체 뱃지 */}
+                    <div className="nav-item active" style={{ position: 'relative' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M4 4H16C17.1 4 18 4.9 18 6V14C18 15.1 17.1 16 16 16H4C2.9 16 2 15.1 2 14V6C2 4.9 2.9 4 4 4Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -140,6 +147,18 @@ function History() {
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                         <span>조언 내역</span>
+                        {totalUnread > 0 && (
+                            <span style={{
+                                position: 'absolute', top: 4, right: 4,
+                                background: '#FF4444', color: 'white',
+                                borderRadius: '50%', fontSize: 11,
+                                minWidth: 18, height: 18,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                padding: '0 4px'
+                            }}>
+                                {totalUnread > 99 ? '99+' : totalUnread}
+                            </span>
+                        )}
                     </div>
                 </nav>
             </aside>
@@ -170,6 +189,7 @@ function History() {
                     )}
                     {rooms.map((room) => {
                         const partnerId = room.userA === myId ? room.userB : room.userA;
+                        const unread = unreadMap[room.id] || 0; // 🔥 방별 안읽은 수
                         return (
                             <div key={room.id} className="history-item">
                                 <div className="history-item-content">
@@ -183,8 +203,22 @@ function History() {
                                             : ''
                                         }
                                     </div>
+                                    {/* 🔥 이름 옆에 뱃지 */}
                                     <div className="history-info">
-                                        <h3 className="history-name">{partnerId}</h3>
+                                        <h3 className="history-name" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                            {partnerId}
+                                            {unread > 0 && (
+                                                <span style={{
+                                                    background: '#FF4444', color: 'white',
+                                                    borderRadius: '50%', fontSize: 11,
+                                                    minWidth: 18, height: 18,
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    padding: '0 4px'
+                                                }}>
+                                                    {unread > 99 ? '99+' : unread}
+                                                </span>
+                                            )}
+                                        </h3>
                                     </div>
                                 </div>
                                 <button
