@@ -12,7 +12,7 @@ function MyPage() {
     const [userInfo, setUserInfo] = useState({
         name: '',
         profileImage: '',
-        tags: [],
+        // tags: [],
         job: '',
         province: '',
         city: '',
@@ -34,11 +34,10 @@ function MyPage() {
     });
 
     const [tempValues, setTempValues] = useState({ ...userInfo });
-    const [showTagModal, setShowTagModal] = useState(false);
-    const [tempTags, setTempTags] = useState([]);
-    const [newTag, setNewTag] = useState('');
+    // const [showTagModal, setShowTagModal] = useState(false);
+    // const [tempTags, setTempTags] = useState([]);
+    // const [newTag, setNewTag] = useState('');
 
-    // ✅ 내 정보 불러오기
     useEffect(() => {
         fetch(`${BASE_URL}/member/me`, {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -48,7 +47,7 @@ function MyPage() {
                 const loaded = {
                     name: data.name || '',
                     profileImage: data.profileImage || '',
-                    tags: data.tags ? data.tags.split(',').filter(t => t) : [],
+                    // tags: data.tags ? data.tags.split(',').filter(t => t) : [],
                     job: data.job || '',
                     province: data.province || '',
                     city: data.city || '',
@@ -63,7 +62,6 @@ function MyPage() {
             .catch(err => console.error('내 정보 로드 오류:', err));
     }, []);
 
-    // ✅ 전체 저장
     const handleSaveAll = async () => {
         const updatedInfo = { ...userInfo };
         Object.keys(editMode).forEach(field => {
@@ -80,14 +78,14 @@ function MyPage() {
                 body: JSON.stringify({
                     name: updatedInfo.name,
                     job: updatedInfo.job,
-                    province: updatedInfo.province,  // ← 이거 추가!
-                    city: updatedInfo.city,          // ← 이거 추가!
+                    province: updatedInfo.province,
+                    city: updatedInfo.city,
                     age: parseInt(updatedInfo.age),
                     concern: updatedInfo.concern,
                     concernDetail: updatedInfo.concernDetail,
                     emotion: updatedInfo.emotion,
                     profileImage: updatedInfo.profileImage,
-                    tags: updatedInfo.tags.join(',')
+                    // tags: updatedInfo.tags.join(',')
                 })
             });
 
@@ -95,8 +93,8 @@ function MyPage() {
             setEditMode({
                 name: false,
                 job: false,
-                province: false,  // ← 이것도!
-                city: false,      // ← 이것도!
+                province: false,
+                city: false,
                 age: false,
                 concern: false,
                 concernDetail: false,
@@ -127,47 +125,45 @@ function MyPage() {
         input.click();
     };
 
-    // 태그 변경 모달
-    const handleTagChange = () => {
-        setTempTags([...userInfo.tags]);
-        setShowTagModal(true);
-    };
+    // const handleTagChange = () => {
+    //     setTempTags([...userInfo.tags]);
+    //     setShowTagModal(true);
+    // };
 
-    const handleAddTag = () => {
-        if (newTag.trim() && tempTags.length < 5) {
-            const formattedTag = newTag.startsWith('#') ? newTag : `#${newTag}`;
-            setTempTags([...tempTags, formattedTag]);
-            setNewTag('');
-        }
-    };
+    // const handleAddTag = () => {
+    //     if (newTag.trim() && tempTags.length < 5) {
+    //         const formattedTag = newTag.startsWith('#') ? newTag : `#${newTag}`;
+    //         setTempTags([...tempTags, formattedTag]);
+    //         setNewTag('');
+    //     }
+    // };
 
-    const handleRemoveTag = (index) => {
-        setTempTags(tempTags.filter((_, idx) => idx !== index));
-    };
+    // const handleRemoveTag = (index) => {
+    //     setTempTags(tempTags.filter((_, idx) => idx !== index));
+    // };
 
-    //  태그 저장
-    const handleSaveTag = async () => {
-        try {
-            await fetch(`${BASE_URL}/member/me`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ tags: tempTags.join(',') })
-            });
-            setUserInfo({ ...userInfo, tags: tempTags });
-            setShowTagModal(false);
-        } catch (err) {
-            console.error('태그 저장 오류:', err);
-            alert('태그 저장에 실패했습니다.');
-        }
-    };
+    // const handleSaveTag = async () => {
+    //     try {
+    //         await fetch(`${BASE_URL}/member/me`, {
+    //             method: 'PATCH',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             body: JSON.stringify({ tags: tempTags.join(',') })
+    //         });
+    //         setUserInfo({ ...userInfo, tags: tempTags });
+    //         setShowTagModal(false);
+    //     } catch (err) {
+    //         console.error('태그 저장 오류:', err);
+    //         alert('태그 저장에 실패했습니다.');
+    //     }
+    // };
 
-    const handleCloseTagModal = () => {
-        setShowTagModal(false);
-        setNewTag('');
-    };
+    // const handleCloseTagModal = () => {
+    //     setShowTagModal(false);
+    //     setNewTag('');
+    // };
 
     const toggleEdit = (field) => {
         if (editMode[field]) {
@@ -182,14 +178,11 @@ function MyPage() {
         setTempValues({ ...tempValues, [field]: value });
     };
 
-    //로그아웃
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/login');
     };
 
-
-    // ✅ 회원 탈퇴
     const handleDeleteAccount = async () => {
         if (window.confirm('정말로 회원 탈퇴하시겠습니까?')) {
             try {
@@ -274,15 +267,15 @@ function MyPage() {
                                     </svg>
                                 </button>
                             </div>
-                            <div className="profile-tags">
+                            {/* <div className="profile-tags">
                                 {userInfo.tags.map((tag, idx) => (
                                     <span key={idx} className="profile-tag-item">{tag}</span>
                                 ))}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <div className="profile-buttons">
-                        <button className="profile-button-secondary" onClick={handleTagChange}>태그 변경</button>
+                        {/* <button className="profile-button-secondary" onClick={handleTagChange}>태그 변경</button> */}
                         <button className="profile-button-primary" onClick={handleProfileChange}>프로필 변경</button>
                     </div>
                 </div>
@@ -377,6 +370,7 @@ function MyPage() {
                             </svg>
                         </button>
                     </div>
+
                     {/* 기분 */}
                     <div className="mypage-field">
                         <p>나의 기분은?</p>
@@ -401,6 +395,7 @@ function MyPage() {
                             </svg>
                         </button>
                     </div>
+
                     {/* 고민 */}
                     <div className="mypage-field">
                         <p>고민</p>
@@ -432,10 +427,12 @@ function MyPage() {
                             </svg>
                         </button>
                     </div>
+
                     <div className="mypage-field">
                         <button className="mypage-save-button" onClick={handleSaveAll}>저장</button>
                     </div>
                 </div>
+
                 {/* 하단 버튼 */}
                 <div className="mypage-bottom-buttons">
                     <button className="mypage-logout-button" onClick={handleLogout}>로그아웃</button>
@@ -444,7 +441,7 @@ function MyPage() {
             </main>
 
             {/* 태그 변경 모달 */}
-            {showTagModal && (
+            {/* {showTagModal && (
                 <div className="tag-modal-overlay" onClick={handleCloseTagModal}>
                     <div className="tag-modal-content" onClick={(e) => e.stopPropagation()}>
                         <h2 className="tag-modal-title">태그 변경</h2>
@@ -476,7 +473,7 @@ function MyPage() {
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 }

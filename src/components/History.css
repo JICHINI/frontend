@@ -60,10 +60,10 @@
     cursor: pointer;
 }
 
-/*.history-item:hover {*/
-/*    border-color: #50B6FF;*/
-/*    transform: translateY(-2px);*/
-/*}*/
+.history-item:hover {
+    border-color: #50B6FF;
+    transform: translateY(-2px);
+}
 
 .history-item-content {
     display: flex;
@@ -123,9 +123,9 @@
     transition: all 0.2s;
 }
 
-/*.history-chat-button:hover {*/
-/*    transform: scale(1.1);*/
-/*}*/
+.history-chat-button:hover {
+    transform: scale(1.1);
+}
 
 .history-chat-button svg {
     transition: transform 0.2s;

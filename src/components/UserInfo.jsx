@@ -26,7 +26,10 @@ function UserInfo() {
             return;
         }
 
-        // if()
+        if(연령 < 5 || 연령 > 120) {
+            setError('나이는 5살 이상, 120살 이하만 이용 가능합니다.');
+            return;
+        }
 
         try {
             const signupData = JSON.parse(sessionStorage.getItem('signupData')); // 1단계에서 저장한 데이터
@@ -135,7 +138,7 @@ function UserInfo() {
                             <label className="input-label">연령</label>
                             <input
                                 type="number"
-                                min={20}
+                                min={5}
                                 max={120}
                                 className="input-field"
                                 placeholder="연령이 어떻게 되시나요?"
