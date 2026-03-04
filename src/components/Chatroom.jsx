@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import './ChatRoom.css';
+import './Chatroom.css';
 import Logo from '../image/Logo.png';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
