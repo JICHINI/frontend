@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import { useNavigate} from 'react-router-dom';
 import './Chat.css';
 import Logo from '../image/Logo.png';
@@ -82,21 +82,23 @@ function Chat() {
         })
             .then(r => r.json())
             .then(data => {
+                console.log("rooms 데이터:", data);
                 const ids = data.map(room =>
                     room.userA === myId ? room.userB : room.userA
                 );
+                console.log("metUserIds 설정:", ids);
                 setMetUserIds(ids);
             });
     }, []);
 
     // 카드에서 내 ID 필터링 및 이미 매칭되서 채팅방있는 사람들 필터
-    const filterCards = (cards) => {
+    const filterCards = useCallback((cards) => {
         if (!cards) return null;
         const filtered = cards.filter(c =>
-            c.userId !== myId && !metUserIds.includes(c.userId)  // ← includes 이미 있는 사람들
+            c.userId !== myId && !metUserIds.includes(c.userId)
         );
         return filtered.length > 0 ? filtered : null;
-    };
+    }, [metUserIds, myId]);
 
     // AI에게 메시지 보내기
     // const sendToAI = async (message) => {
