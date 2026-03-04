@@ -19,12 +19,14 @@ function UserInfo() {
     const handleComplete = async () => {
 
         const signupData = JSON.parse(sessionStorage.getItem('signupData'));
-        console.log('signupData 확인:', signupData);  // F12 콘솔에서 확인
+        console.log('signupData 확인:', signupData);
 
-        if (!연령) {
+        if (!연령 || !시군 || !고민내용 || !거주지) {
             setError('모든 항목을 입력해주세요.');
             return;
         }
+
+        // if()
 
         try {
             const signupData = JSON.parse(sessionStorage.getItem('signupData')); // 1단계에서 저장한 데이터
@@ -133,6 +135,8 @@ function UserInfo() {
                             <label className="input-label">연령</label>
                             <input
                                 type="number"
+                                min={20}
+                                max={120}
                                 className="input-field"
                                 placeholder="연령이 어떻게 되시나요?"
                                 value={연령}
@@ -184,7 +188,8 @@ function UserInfo() {
                             <label className="input-label">고민을 더 자세히 알려주세요!</label>
                             <textarea
                                 className="input-textarea"
-                                placeholder="(선택사항)"
+                                placeholder="필수 사항"
+                                required
                                 value={고민내용}
                                 onChange={(e) => set고민내용(e.target.value)}
                             />
