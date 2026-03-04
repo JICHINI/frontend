@@ -526,8 +526,11 @@ function Chat() {
                             </div>
                             <h2 className="modal-name">{currentUser.userId}</h2>
                             <div className="modal-tags">
-                                {currentUser.tags && (
-                                    <span className="modal-tag">{currentUser.tags}</span>
+                                {currentUser.province && (
+                                    <span className="modal-tag">#{currentUser.province}</span>
+                                )}
+                                {currentUser.city && (
+                                    <span className="modal-tag">#{currentUser.city}</span>
                                 )}
                             </div>
 
@@ -535,12 +538,12 @@ function Chat() {
                             <div className="modal-concern">
                                 {currentUser.concern && (
                                     <p className="modal-description">
-                                        <strong style={{ fontSize: '18px' }}>고민 : </strong> {currentUser.concern}
+                                        <strong style={{ fontSize: '18px' }}>고민</strong> {currentUser.concern}
                                     </p>
                                 )}
                                 {currentUser.concernDetail && (
                                     <p className="modal-description">
-                                        <strong style={{ fontSize: '18px' }}>상세고민 : </strong> {currentUser.concernDetail}
+                                        <strong style={{ fontSize: '18px' }}>상세고민</strong> {currentUser.concernDetail}
                                     </p>
                                 )}
                             </div>
