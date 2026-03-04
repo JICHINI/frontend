@@ -27,6 +27,23 @@ function ChatRoom() {
             return '';
         }
     };
+    const [partnerInfo, setPartnerInfo] = useState({ province: province || '', city: city || '' });
+
+    useEffect(() => {
+        if (!partnerId) return;
+        fetch(`${BASE_URL}/member/profile/${partnerId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(r => r.json())
+            .then(data => setPartnerInfo({ province: data.province || '', city: data.city || '' }))
+            .catch(err => console.error(err));
+    }, [partnerId]);
+
+    const tags = [
+        partnerInfo.province && `#${partnerInfo.province}`,
+        partnerInfo.city && `#${partnerInfo.city}`
+    ].filter(Boolean);
+
     const myId = getMyId();
 
     useEffect(() => {
@@ -104,10 +121,6 @@ function ChatRoom() {
         }
     };
 
-    const tags = [
-        province && `#${province}`,
-        city && `#${city}`
-    ].filter(Boolean);
 
     return (
         <div className="chatroom-container">
