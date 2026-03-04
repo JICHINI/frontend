@@ -159,10 +159,10 @@ function Main() {
                             <span style={{
                                 position: 'absolute', top: 4, right: 4,
                                 background: '#FF4444', color: 'white',
-                                borderRadius: '50%', fontSize: 11,
-                                minWidth: 18, height: 18,
+                                borderRadius: '50%', fontSize: 9,
+                                minWidth: 20, height: 20,
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                padding: '0 4px'
+                                padding: '4px 4px'
                             }}>
                                 {totalUnread > 99 ? '99+' : totalUnread}
                             </span>
