@@ -2,8 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import './History.css';
+import styles from "./History.module.css";
+import { bindClassNames } from "../utils/classNames";
 import Logo from '../image/Logo.png';
+const css = bindClassNames(styles);
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
@@ -109,20 +112,20 @@ function History() {
     };
 
     return (
-        <div className="history-container">
+        <div className={css("history-container")}>
             {/* 사이드바 */}
-            <aside className="sidebar">
-                <div className="sidebar-header">
+            <aside className={css("sidebar")}>
+                <div className={css("sidebar-header")}>
                     <img
                         src={Logo}
                         alt="JICHINI"
-                        className="sidebar-logo"
+                        className={css("sidebar-logo")}
                         onClick={() => navigate('/main')}
                     />
                 </div>
 
-                <nav className="sidebar-nav">
-                    <div className="nav-item" onClick={() => navigate('/main')}>
+                <nav className={css("sidebar-nav")}>
+                    <div className={css("nav-item")} onClick={() => navigate('/main')}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M3 10L10 3L17 10V17C17 17.5304 16.7893 18.0391 16.4142 18.4142C16.0391 18.7893 15.5304 19 15 19H5C4.46957 19 3.96086 18.7893 3.58579 18.4142C3.21071 18.0391 3 17.5304 3 17V10Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -130,7 +133,7 @@ function History() {
                         <span>홈</span>
                     </div>
 
-                    <div className="nav-item" onClick={() => navigate('/chat')}>
+                    <div className={css("nav-item")} onClick={() => navigate('/chat')}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M17 9C17 13.4183 13.4183 17 9 17C7.73835 17 6.55719 16.6916 5.52349 16.1462L2 17L2.85382 13.4765C2.30838 12.4428 2 11.2617 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -139,7 +142,7 @@ function History() {
                     </div>
 
                     {/* 🔥 조언 내역 + 전체 뱃지 */}
-                    <div className="nav-item active" style={{ position: 'relative' }}>
+                    <div className={css("nav-item active")} style={{ position: 'relative' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M4 4H16C17.1 4 18 4.9 18 6V14C18 15.1 17.1 16 16 16H4C2.9 16 2 15.1 2 14V6C2 4.9 2.9 4 4 4Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -164,12 +167,12 @@ function History() {
             </aside>
 
             {/* 메인 영역 */}
-            <main className="history-main">
+            <main className={css("history-main")}>
                 {/* 헤더 */}
-                <header className="history-header">
-                    <div className="header-spacer"></div>
+                <header className={css("history-header")}>
+                    <div className={css("header-spacer")}></div>
                     <button
-                        className="history-profile-button"
+                        className={css("history-profile-button")}
                         onClick={() => navigate('/mypage')}
                     >
                         <svg width="50" height="50" viewBox="0 0 32 32" fill="none">
@@ -182,7 +185,7 @@ function History() {
                 </header>
 
                 {/* 채팅 목록 */}
-                <div className="history-list">
+                <div className={css("history-list")}>
                     {loading && <p style={{ padding: '2rem', color: '#999' }}>불러오는 중...</p>}
                     {!loading && rooms.length === 0 && (
                         <p style={{ padding: '2rem', color: '#999' }}>아직 대화 내역이 없어요</p>
@@ -191,10 +194,10 @@ function History() {
                         const partnerId = room.userA === myId ? room.userB : room.userA;
                         const unread = unreadMap[room.id] || 0; // 🔥 방별 안읽은 수
                         return (
-                            <div key={room.id} className="history-item">
-                                <div className="history-item-content">
+                            <div key={room.id} className={css("history-item")}>
+                                <div className={css("history-item-content")}>
                                     {/* 아바타 */}
-                                    <div className="history-profile" style={{
+                                    <div className={css("history-profile")} style={{
                                         width: 44, height: 44, borderRadius: '50%',
                                         overflow: 'hidden'
                                     }}>
@@ -204,8 +207,8 @@ function History() {
                                         }
                                     </div>
                                     {/* 🔥 이름 옆에 뱃지 */}
-                                    <div className="history-info">
-                                        <h3 className="history-name" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <div className={css("history-info")}>
+                                        <h3 className={css("history-name")} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                             {partnerId}
                                             {unread > 0 && (
                                                 <span style={{
@@ -222,7 +225,7 @@ function History() {
                                     </div>
                                 </div>
                                 <button
-                                    className="history-chat-button"
+                                    className={css("history-chat-button")}
                                     onClick={() => handleChatClick(room)}
                                 >
                                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none">

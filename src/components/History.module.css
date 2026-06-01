@@ -1,0 +1,250 @@
+.history-container {
+  display: flex;
+  height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.sidebar {
+  width: 232px;
+  min-height: 100vh;
+  padding: 22px 14px;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: center;
+  padding: 8px 8px 28px;
+}
+
+.sidebar-logo {
+  width: 132px;
+  height: auto;
+  cursor: pointer;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.nav-item:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
+.active,
+.nav-item.active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.nav-item svg {
+  flex-shrink: 0;
+}
+
+.history-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+
+.history-header {
+  height: 72px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+}
+
+.header-spacer {
+  flex: 1;
+}
+
+.history-profile-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-profile-button:hover {
+  border-color: var(--color-primary);
+}
+
+.history-profile-button svg {
+  width: 34px;
+  height: 34px;
+}
+
+.history-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 32px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.history-item:hover {
+  border-color: var(--color-primary);
+}
+
+.history-item-content {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+
+.history-profile {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.history-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-name {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.history-tags {
+  display: flex;
+  gap: 8px;
+}
+
+.history-tag {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.history-chat-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.history-chat-button:hover {
+  background: var(--color-primary-hover);
+}
+
+.history-chat-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+.history-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background: #CAD7E1;
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 76px;
+    padding: 18px 10px;
+  }
+
+  .sidebar-logo {
+    width: 46px;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .nav-item span {
+    display: none;
+  }
+
+  .history-header {
+    height: 64px;
+    padding: 0 20px;
+  }
+
+  .history-list {
+    padding: 0 20px 24px;
+  }
+
+  .history-item {
+    padding: 12px;
+  }
+
+  .history-name {
+    font-size: 16px;
+  }
+}

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './UserInfo.css';
+import styles from "./UserInfo.module.css";
+import { bindClassNames } from "../utils/classNames";
 import Logo from '../image/Logo.png';
+const css = bindClassNames(styles);
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function UserInfo() {
@@ -63,24 +66,24 @@ function UserInfo() {
     };
 
     return (
-        <div className="userinfo-container">
-            <div className="userinfo-header">
-                <img src={Logo} alt="JICHINI" className="userinfo-logo" />
+        <div className={css("userinfo-container")}>
+            <div className={css("userinfo-header")}>
+                <img src={Logo} alt="JICHINI" className={css("userinfo-logo")} />
             </div>
 
-            <div className="userinfo-content">
-                <h1 className="userinfo-title">내 정보 입력</h1>
+            <div className={css("userinfo-content")}>
+                <h1 className={css("userinfo-title")}>내 정보 입력</h1>
 
-                <div className="userinfo-sections">
+                <div className={css("userinfo-sections")}>
                     {/* 왼쪽: 기본 정보 입력 */}
-                    <div className="userinfo-section">
-                        <h2 className="section-title">기본 정보 입력(필수)</h2>
+                    <div className={css("userinfo-section")}>
+                        <h2 className={css("section-title")}>기본 정보 입력(필수)</h2>
 
                         {/* 직업 */}
-                        <div className="input-group">
-                            <label className="input-label">직업</label>
+                        <div className={css("input-group")}>
+                            <label className={css("input-label")}>직업</label>
                             <select
-                                className="input-select"
+                                className={css("input-select")}
                                 value={직업}
                                 onChange={(e) => set직업(e.target.value)}
                             >
@@ -93,11 +96,11 @@ function UserInfo() {
                         </div>
 
                         {/* 거주지 */}
-                        <div className="input-group">
-                            <div className="input-group">
-                                <label className="input-label">거주지</label>
+                        <div className={css("input-group")}>
+                            <div className={css("input-group")}>
+                                <label className={css("input-label")}>거주지</label>
                                 <select
-                                    className="input-select"
+                                    className={css("input-select")}
                                     value={거주지}
                                     onChange={(e) => set거주지(e.target.value)}
                                 >
@@ -122,11 +125,11 @@ function UserInfo() {
                                 </select>
                             </div>
                         </div>
-                        <div className="input-group">
-                            <label className="input-label">시/군</label>
+                        <div className={css("input-group")}>
+                            <label className={css("input-label")}>시/군</label>
                             <input
                                 type="input"
-                                className="input-input"
+                                className={css("input-input")}
                                 placeholder="예시) 구미시"
                                 value={시군}
                                 onChange={(e) => set시군(e.target.value)}
@@ -134,13 +137,13 @@ function UserInfo() {
                             </input>
                         </div>
                         {/* 연령 */}
-                        <div className="input-group">
-                            <label className="input-label">연령</label>
+                        <div className={css("input-group")}>
+                            <label className={css("input-label")}>연령</label>
                             <input
                                 type="number"
                                 min={5}
                                 max={120}
-                                className="input-field"
+                                className={css("input-field")}
                                 placeholder="연령이 어떻게 되시나요?"
                                 value={연령}
                                 onChange={(e) => set연령(e.target.value)}
@@ -149,15 +152,15 @@ function UserInfo() {
                     </div>
 
                     {/* 오른쪽: 고민/심리 상태 입력 */}
-                    <div className="userinfo-section">
-                        <h2 className="section-title">고민/심리 상태 입력(선택)</h2>
+                    <div className={css("userinfo-section")}>
+                        <h2 className={css("section-title")}>고민/심리 상태 입력(선택)</h2>
 
 
                         {/* 나의 오늘 감정은? */}
-                        <div className="input-group">
-                            <label className="input-label">나의 기분은?</label>
+                        <div className={css("input-group")}>
+                            <label className={css("input-label")}>나의 기분은?</label>
                             <select
-                                className="input-select"
+                                className={css("input-select")}
                                 value={감정}
                                 onChange={(e) => set감정(e.target.value)}
                             >
@@ -170,10 +173,10 @@ function UserInfo() {
                             </select>
                         </div>
                         {/* 고민 */}
-                        <div className="input-group">
-                            <label className="input-label">고민</label>
+                        <div className={css("input-group")}>
+                            <label className={css("input-label")}>고민</label>
                             <select
-                                className="input-select"
+                                className={css("input-select")}
                                 value={고민}
                                 onChange={(e) => set고민(e.target.value)}
                             >
@@ -187,10 +190,10 @@ function UserInfo() {
                         </div>
 
                         {/* 고민을 더 자세히 알려주세요 */}
-                        <div className="input-group">
-                            <label className="input-label">고민을 더 자세히 알려주세요!</label>
+                        <div className={css("input-group")}>
+                            <label className={css("input-label")}>고민을 더 자세히 알려주세요!</label>
                             <textarea
-                                className="input-textarea"
+                                className={css("input-textarea")}
                                 placeholder="필수 사항"
                                 required
                                 value={고민내용}
@@ -203,14 +206,14 @@ function UserInfo() {
                 </div>
 
                 {/* 에러 메시지 */}
-                {error && <p className="error-message">{error}</p>}
+                {error && <p className={css("error-message")}>{error}</p>}
 
                 {/* 버튼 */}
-                <div className="button-group">
-                    <button className="cancel-button" onClick={() => navigate('/terms')}>
+                <div className={css("button-group")}>
+                    <button className={css("cancel-button")} onClick={() => navigate('/terms')}>
                         취소
                     </button>
-                    <button className="submit-button" onClick={handleComplete}>
+                    <button className={css("submit-button")} onClick={handleComplete}>
                         회원가입
                     </button>
                 </div>

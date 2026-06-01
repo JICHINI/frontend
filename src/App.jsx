@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Terms from "./components/Terms";
@@ -9,15 +9,22 @@ import Chat from "./components/Chat";
 import Chatroom from "./components/Chatroom.jsx";
 import History from "./components/History";
 
-import "./App.css";
+import styles from "./App.module.css";
+import { bindClassNames } from "./utils/classNames";
 import MyPage from "./components/MyPage.jsx";
+const css = bindClassNames(styles);
+
 
 function App() {
     return (
         <BrowserRouter>
-            <div className="App">
+            <div className={css("App")}>
                 <Routes>
-                    <Route path="/" element={<Login />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route
+                        path="/"
+                        element={<Navigate to={"/login"} replace />}
+                    />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/userinfo" element={<UserInfo />} />

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';
+import styles from "./Login.module.css";
+import { bindClassNames } from "../utils/classNames";
 import Logo from '../image/Logo.png';
+const css = bindClassNames(styles);
+
 
 function Login() {
   const [userId, setUserId] = useState('');
@@ -32,41 +35,41 @@ function Login() {
   };
 
   return (
-      <div className="login-container">
-        <div className="login-form-card">
-          <h1 className="login-title">로그인</h1>
-          <p className="login-subtitle">서비스를 시작하려면 로그인 하세요</p>
+      <div className={css("login-container")}>
+        <div className={css("login-form-card")}>
+          <h1 className={css("login-title")}>로그인</h1>
+          <p className={css("login-subtitle")}>서비스를 시작하려면 로그인 하세요</p>
 
-          <div className="login-input-group">
-            <label className="login-label">아이디</label>
-            <div className="login-input-wrapper">
-              <input type="text" className="login-input-field"
+          <div className={css("login-input-group")}>
+            <label className={css("login-label")}>아이디</label>
+            <div className={css("login-input-wrapper")}>
+              <input type="text" className={css("login-input-field")}
                      value={userId} onChange={(e) => setUserId(e.target.value)} />
             </div>
           </div>
 
-          <div className="login-input-group">
-            <label className="login-label">비밀번호</label>
-            <div className="login-input-wrapper">
-              <input type="password" className="login-input-field"
+          <div className={css("login-input-group")}>
+            <label className={css("login-label")}>비밀번호</label>
+            <div className={css("login-input-wrapper")}>
+              <input type="password" className={css("login-input-field")}
                      value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
           </div>
 
           {error && <p style={{ color: 'red', fontSize: '13px' }}>{error}</p>}
 
-          <button className="login-submit-button" onClick={handleLogin}>
+          <button className={css("login-submit-button")} onClick={handleLogin}>
             로그인
           </button>
 
-          <p className="login-link-text" onClick={() => navigate('/signup')}>
+          <p className={css("login-link-text")} onClick={() => navigate('/signup')}>
             계정이 없으신가요?
           </p>
         </div>
 
-        <div className="login-logo-container">
-          <div className="login-logo">
-            <img src={Logo} className="login-logo-img" />
+        <div className={css("login-logo-container")}>
+          <div className={css("login-logo")}>
+            <img src={Logo} className={css("login-logo-img")} />
           </div>
         </div>
       </div>

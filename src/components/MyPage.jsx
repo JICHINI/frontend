@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './MyPage.css';
+import styles from "./MyPage.module.css";
+import { bindClassNames } from "../utils/classNames";
 import Logo from '../image/Logo.png';
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+const css = bindClassNames(styles);
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
@@ -241,28 +244,28 @@ function MyPage() {
     };
 
     return (
-        <div className="mypage-container">
+        <div className={css("mypage-container")}>
             {/* 사이드바 */}
-            <aside className="sidebar">
-                <div className="sidebar-header">
-                    <img src={Logo} alt="JICHINI" className="sidebar-logo" onClick={() => navigate('/main')} />
+            <aside className={css("sidebar")}>
+                <div className={css("sidebar-header")}>
+                    <img src={Logo} alt="JICHINI" className={css("sidebar-logo")} onClick={() => navigate('/main')} />
                 </div>
-                <nav className="sidebar-nav">
-                    <div className="nav-item" onClick={() => navigate('/main')}>
+                <nav className={css("sidebar-nav")}>
+                    <div className={css("nav-item")} onClick={() => navigate('/main')}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M3 10L10 3L17 10V17C17 17.5304 16.7893 18.0391 16.4142 18.4142C16.0391 18.7893 15.5304 19 15 19H5C4.46957 19 3.96086 18.7893 3.58579 18.4142C3.21071 18.0391 3 17.5304 3 17V10Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                         <span>홈</span>
                     </div>
-                    <div className="nav-item" onClick={() => navigate('/chat')}>
+                    <div className={css("nav-item")} onClick={() => navigate('/chat')}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M17 9C17 13.4183 13.4183 17 9 17C7.73835 17 6.55719 16.6916 5.52349 16.1462L2 17L2.85382 13.4765C2.30838 12.4428 2 11.2617 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                         <span>채팅</span>
                     </div>
-                    <div className="nav-item" onClick={() => navigate('/history')} style={{ position: 'relative' }}>
+                    <div className={css("nav-item")} onClick={() => navigate('/history')} style={{ position: 'relative' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M4 4H16C17.1 4 18 4.9 18 6V14C18 15.1 17.1 16 16 16H4C2.9 16 2 15.1 2 14V6C2 4.9 2.9 4 4 4Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -286,65 +289,65 @@ function MyPage() {
             </aside>
 
             {/* 메인 영역 */}
-            <main className="mypage-main">
-                <header className="mypage-header">
-                    <h1 className="mypage-title">내 정보</h1>
+            <main className={css("mypage-main")}>
+                <header className={css("mypage-header")}>
+                    <h1 className={css("mypage-title")}>내 정보</h1>
                 </header>
 
                 {/* 프로필 카드 */}
-                <div className="mypage-profile-card">
-                    <div className="profile-image-section">
-                        <div className="profile-image">
+                <div className={css("mypage-profile-card")}>
+                    <div className={css("profile-image-section")}>
+                        <div className={css("profile-image")}>
                             {userInfo.profileImage
                                 ? <img src={userInfo.profileImage} alt="프로필" style={{width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover'}} />
                                 : ''
                             }
                         </div>
-                        <div className="profile-name-section">
-                            <div className="profile-name-wrapper">
+                        <div className={css("profile-name-section")}>
+                            <div className={css("profile-name-wrapper")}>
                                 {editMode.name ? (
                                     <input
                                         type="text"
-                                        className="profile-name-input"
+                                        className={css("profile-name-input")}
                                         value={tempValues.name}
                                         onChange={(e) => handleTempChange('name', e.target.value)}
                                         autoFocus
                                         maxLength={20}
                                     />
                                 ) : (
-                                    <span className="profile-name">{userInfo.name}</span>
+                                    <span className={css("profile-name")}>{userInfo.name}</span>
                                 )}
-                                <button className="edit-icon-button" onClick={() => toggleEdit('name')}>
+                                <button className={css("edit-icon-button")} onClick={() => toggleEdit('name')}>
                                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                                         <path d="M13 2L16 5L6 15H3V12L13 2Z" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                 </button>
                             </div>
-                            {/* <div className="profile-tags">
+                            {/* <div className={css("profile-tags")}>
                                 {userInfo.tags.map((tag, idx) => (
-                                    <span key={idx} className="profile-tag-item">{tag}</span>
+                                    <span key={idx} className={css("profile-tag-item")}>{tag}</span>
                                 ))}
                             </div> */}
                         </div>
                     </div>
-                    <div className="profile-buttons">
-                        {/* <button className="profile-button-secondary" onClick={handleTagChange}>태그 변경</button> */}
-                        <button className="profile-button-primary" onClick={handleProfileChange}>프로필 변경</button>
+                    <div className={css("profile-buttons")}>
+                        {/* <button className={css("profile-button-secondary")} onClick={handleTagChange}>태그 변경</button> */}
+                        <button className={css("profile-button-primary")} onClick={handleProfileChange}>프로필 변경</button>
                     </div>
                 </div>
 
                 {/* 정보 필드 */}
-                <div className="mypage-fields">
+                <div className={css("mypage-fields")}>
                     {/* 직업 */}
-                    <div className="mypage-field">
+                    <div className={css("mypage-field")}>
                         <p>직업</p>
                         {editMode.job ? (
-                            <input type="text" className="mypage-input editing" value={tempValues.job}
+                            <input type="text" className={css("mypage-input editing")} value={tempValues.job}
                                    onChange={(e) => handleTempChange('job', e.target.value)} autoFocus />
                         ) : (
-                            <div className="mypage-input">{userInfo.job}</div>
+                            <div className={css("mypage-input")}>{userInfo.job}</div>
                         )}
-                        <button className="field-edit-button" onClick={() => toggleEdit('job')}>
+                        <button className={css("field-edit-button")} onClick={() => toggleEdit('job')}>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -352,11 +355,11 @@ function MyPage() {
                     </div>
 
                     {/* 거주지 (도) */}
-                    <div className="mypage-field">
+                    <div className={css("mypage-field")}>
                         <p>거주지</p>
                         {editMode.province ? (
                             <select
-                                className="mypage-input editing"
+                                className={css("mypage-input editing")}
                                 value={tempValues.province}
                                 onChange={(e) => handleTempChange('province', e.target.value)}
                                 autoFocus
@@ -381,9 +384,9 @@ function MyPage() {
                                 <option value="제주특별자치도">제주특별자치도</option>
                             </select>
                         ) : (
-                            <div className="mypage-input">{userInfo.province}</div>
+                            <div className={css("mypage-input")}>{userInfo.province}</div>
                         )}
-                        <button className="field-edit-button" onClick={() => toggleEdit('province')}>
+                        <button className={css("field-edit-button")} onClick={() => toggleEdit('province')}>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -391,17 +394,17 @@ function MyPage() {
                     </div>
 
                     {/* 시/군 */}
-                    <div className="mypage-field">
+                    <div className={css("mypage-field")}>
                         <p>시/군</p>
                         {editMode.city ? (
-                            <input type="text" minLength="5" className="mypage-input editing" value={tempValues.city}
+                            <input type="text" minLength="5" className={css("mypage-input editing")} value={tempValues.city}
                                    onChange={(e) => handleTempChange('city', e.target.value)}
                                    placeholder="예: 구미시"
                                    autoFocus />
                         ) : (
-                            <div className="mypage-input">{userInfo.city}</div>
+                            <div className={css("mypage-input")}>{userInfo.city}</div>
                         )}
-                        <button className="field-edit-button" onClick={() => toggleEdit('city')}>
+                        <button className={css("field-edit-button")} onClick={() => toggleEdit('city')}>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -409,15 +412,15 @@ function MyPage() {
                     </div>
 
                     {/* 나이 */}
-                    <div className="mypage-field">
+                    <div className={css("mypage-field")}>
                         <p>나이</p>
                         {editMode.age ? (
-                            <input type="text" className="mypage-input editing" value={tempValues.age}
+                            <input type="text" className={css("mypage-input editing")} value={tempValues.age}
                                    onChange={(e) => handleTempChange('age', e.target.value)} autoFocus />
                         ) : (
-                            <div className="mypage-input">{userInfo.age}</div>
+                            <div className={css("mypage-input")}>{userInfo.age}</div>
                         )}
-                        <button className="field-edit-button" onClick={() => toggleEdit('age')}>
+                        <button className={css("field-edit-button")} onClick={() => toggleEdit('age')}>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -425,11 +428,11 @@ function MyPage() {
                     </div>
 
                     {/* 기분 */}
-                    <div className="mypage-field">
+                    <div className={css("mypage-field")}>
                         <p>나의 기분은?</p>
                         {editMode.emotion ? (
                             <select
-                                className="mypage-input editing"
+                                className={css("mypage-input editing")}
                                 onChange={(e) => handleTempChange('emotion', e.target.value)} autoFocus
                                 value={tempValues.emotion}>
                                 <option value="우울함">우울함</option>
@@ -440,9 +443,9 @@ function MyPage() {
                                 <option value="평온함">평온함</option>
                             </select>
                         ) : (
-                            <div className="mypage-input">{userInfo.emotion}</div>
+                            <div className={css("mypage-input")}>{userInfo.emotion}</div>
                         )}
-                        <button className="field-edit-button" onClick={() => toggleEdit('emotion')}>
+                        <button className={css("field-edit-button")} onClick={() => toggleEdit('emotion')}>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -450,15 +453,15 @@ function MyPage() {
                     </div>
 
                     {/* 고민 */}
-                    <div className="mypage-field">
+                    <div className={css("mypage-field")}>
                         <p>고민</p>
                         {editMode.concern ? (
-                            <input type="text" className="mypage-input editing" value={tempValues.concern}
+                            <input type="text" className={css("mypage-input editing")} value={tempValues.concern}
                                    onChange={(e) => handleTempChange('concern', e.target.value)} autoFocus />
                         ) : (
-                            <div className="mypage-input">{userInfo.concern}</div>
+                            <div className={css("mypage-input")}>{userInfo.concern}</div>
                         )}
-                        <button className="field-edit-button" onClick={() => toggleEdit('concern')}>
+                        <button className={css("field-edit-button")} onClick={() => toggleEdit('concern')}>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -466,63 +469,63 @@ function MyPage() {
                     </div>
 
                     {/* 고민 상세 */}
-                    <div className="mypage-field wide">
+                    <div className={css("mypage-field wide")}>
                         <p>고민을 상세하게 말해주세요!</p>
                         {editMode.concernDetail ? (
-                            <textarea className="mypage-input editing" value={tempValues.concernDetail}
+                            <textarea className={css("mypage-input editing")} value={tempValues.concernDetail}
                                       onChange={(e) => handleTempChange('concernDetail', e.target.value)} autoFocus rows={3} />
                         ) : (
-                            <div className="mypage-input">{userInfo.concernDetail}</div>
+                            <div className={css("mypage-input")}>{userInfo.concernDetail}</div>
                         )}
-                        <button className="field-edit-button" onClick={() => toggleEdit('concernDetail')}>
+                        <button className={css("field-edit-button")} onClick={() => toggleEdit('concernDetail')}>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M14 2L18 6L7 17H3V13L14 2Z" stroke="#50B6FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
                     </div>
 
-                    <div className="mypage-field">
-                        <button className="mypage-save-button" onClick={handleSaveAll}>저장</button>
+                    <div className={css("mypage-field")}>
+                        <button className={css("mypage-save-button")} onClick={handleSaveAll}>저장</button>
                     </div>
                 </div>
 
                 {/* 하단 버튼 */}
-                <div className="mypage-bottom-buttons">
-                    <button className="mypage-logout-button" onClick={handleLogout}>로그아웃</button>
-                    <button className="mypage-delete-button" onClick={handleDeleteAccount}>회원 탈퇴</button>
+                <div className={css("mypage-bottom-buttons")}>
+                    <button className={css("mypage-logout-button")} onClick={handleLogout}>로그아웃</button>
+                    <button className={css("mypage-delete-button")} onClick={handleDeleteAccount}>회원 탈퇴</button>
                 </div>
             </main>
 
             {/* 태그 변경 모달 */}
             {/* {showTagModal && (
-                <div className="tag-modal-overlay" onClick={handleCloseTagModal}>
-                    <div className="tag-modal-content" onClick={(e) => e.stopPropagation()}>
-                        <h2 className="tag-modal-title">태그 변경</h2>
-                        <div className="tag-list">
+                <div className={css("tag-modal-overlay")} onClick={handleCloseTagModal}>
+                    <div className={css("tag-modal-content")} onClick={(e) => e.stopPropagation()}>
+                        <h2 className={css("tag-modal-title")}>태그 변경</h2>
+                        <div className={css("tag-list")}>
                             {tempTags.map((tag, index) => (
-                                <div key={index} className="tag-item">
+                                <div key={index} className={css("tag-item")}>
                                     <span>{tag}</span>
-                                    <button className="tag-remove-button" onClick={() => handleRemoveTag(index)}>×</button>
+                                    <button className={css("tag-remove-button")} onClick={() => handleRemoveTag(index)}>×</button>
                                 </div>
                             ))}
                         </div>
-                        <div className="tag-input-section">
+                        <div className={css("tag-input-section")}>
                             <input
                                 type="text"
-                                className="tag-input"
+                                className={css("tag-input")}
                                 placeholder="태그 입력 (예: 학생)"
                                 value={newTag}
                                 onChange={(e) => setNewTag(e.target.value)}
                                 onKeyPress={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddTag(); } }}
                                 maxLength={20}
                             />
-                            <button className="tag-add-button" onClick={handleAddTag}
+                            <button className={css("tag-add-button")} onClick={handleAddTag}
                                     disabled={!newTag.trim() || tempTags.length >= 5}>추가</button>
                         </div>
-                        <p className="tag-hint">최대 5개까지 추가 가능합니다.</p>
-                        <div className="tag-modal-buttons">
-                            <button className="tag-modal-cancel" onClick={handleCloseTagModal}>취소</button>
-                            <button className="tag-modal-save" onClick={handleSaveTag}>저장</button>
+                        <p className={css("tag-hint")}>최대 5개까지 추가 가능합니다.</p>
+                        <div className={css("tag-modal-buttons")}>
+                            <button className={css("tag-modal-cancel")} onClick={handleCloseTagModal}>취소</button>
+                            <button className={css("tag-modal-save")} onClick={handleSaveTag}>저장</button>
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Signup.css';
+import styles from "./Signup.module.css";
+import { bindClassNames } from "../utils/classNames";
 import Logo from '../image/Logo.png';
+const css = bindClassNames(styles);
+
 
 function Signup() {
   const [name, setName] = useState('');
@@ -56,52 +59,52 @@ function Signup() {
   };
 
   return (
-      <div className="signup-container">
-        <div className="signup-form-card">
-          <h1 className="signup-title">회원가입</h1>
+      <div className={css("signup-container")}>
+        <div className={css("signup-form-card")}>
+          <h1 className={css("signup-title")}>회원가입</h1>
 
-          <div className="signup-input-group">
-            <label className="signup-label">이름</label>
-            <div className="signup-input-wrapper">
-              <input type="text" className="signup-input-field"
+          <div className={css("signup-input-group")}>
+            <label className={css("signup-label")}>이름</label>
+            <div className={css("signup-input-wrapper")}>
+              <input type="text" className={css("signup-input-field")}
                      value={name} onChange={(e) => setName(e.target.value)} />
             </div>
           </div>
 
-          <div className="signup-input-group">
-            <label className="signup-label">아이디</label>
-            <div className="signup-input-wrapper">
-              <input type="text" className="signup-input-field" minLength={3}
+          <div className={css("signup-input-group")}>
+            <label className={css("signup-label")}>아이디</label>
+            <div className={css("signup-input-wrapper")}>
+              <input type="text" className={css("signup-input-field")} minLength={3}
                      value={userId} onChange={(e) => setUserId(e.target.value)} />
             </div>
           </div>
 
-          <div className="signup-input-group">
-            <label className="signup-label">비밀번호</label>
-            <div className="signup-input-wrapper">
-              <input type="password" className="signup-input-field"
+          <div className={css("signup-input-group")}>
+            <label className={css("signup-label")}>비밀번호</label>
+            <div className={css("signup-input-wrapper")}>
+              <input type="password" className={css("signup-input-field")}
                      value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
           </div>
 
-          <div className="signup-input-group">
-            <label className="signup-label">비밀번호 확인</label>
-            <div className="signup-input-wrapper">
-              <input type="password" className="signup-input-field"
+          <div className={css("signup-input-group")}>
+            <label className={css("signup-label")}>비밀번호 확인</label>
+            <div className={css("signup-input-wrapper")}>
+              <input type="password" className={css("signup-input-field")}
                      value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </div>
           </div>
 
           {error && <p style={{ color: 'red', fontSize: '13px' }}>{error}</p>}
 
-          <button className="signup-submit-button" onClick={handleSignup}>
+          <button className={css("signup-submit-button")} onClick={handleSignup}>
             다음
           </button>
         </div>
 
-        <div className="signup-logo-container">
-          <div className="signup-logo">
-            <img src={Logo} className="signup-logo-img" />
+        <div className={css("signup-logo-container")}>
+          <div className={css("signup-logo")}>
+            <img src={Logo} className={css("signup-logo-img")} />
           </div>
         </div>
       </div>

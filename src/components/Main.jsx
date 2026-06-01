@@ -2,8 +2,11 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import './Main.css';
+import styles from "./Main.module.css";
+import { bindClassNames } from "../utils/classNames";
 import Logo from '../image/Logo.png';
+const css = bindClassNames(styles);
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
@@ -97,20 +100,20 @@ function Main() {
     }, []);
 
     return (
-        <div className="main-container">
+        <div className={css("main-container")}>
             {/* 왼쪽 사이드바 */}
-            <aside className="sidebar">
-                <div className="sidebar-header">
+            <aside className={css("sidebar")}>
+                <div className={css("sidebar-header")}>
                     <img
                         src={Logo}
                         alt="JICHINI"
-                        className="sidebar-logo"
+                        className={css("sidebar-logo")}
                         onClick={() => navigate('/main')}
                     />
                 </div>
 
-                <nav className="sidebar-nav">
-                    <div className="nav-item active" onClick={() => navigate('/main')}>
+                <nav className={css("sidebar-nav")}>
+                    <div className={css("nav-item active")} onClick={() => navigate('/main')}>
                         <svg
                             width="20"
                             height="20"
@@ -129,7 +132,7 @@ function Main() {
                         <span>홈</span>
                     </div>
 
-                    <div className="nav-item" onClick={() => navigate('/chat')}>
+                    <div className={css("nav-item")} onClick={() => navigate('/chat')}>
                         <svg
                             width="20"
                             height="20"
@@ -147,7 +150,7 @@ function Main() {
                         </svg>
                         <span>채팅</span>
                     </div>
-                    <div className="nav-item" onClick={() => navigate('/history')} style={{ position: 'relative' }}>
+                    <div className={css("nav-item")} onClick={() => navigate('/history')} style={{ position: 'relative' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M4 4H16C17.1 4 18 4.9 18 6V14C18 15.1 17.1 16 16 16H4C2.9 16 2 15.1 2 14V6C2 4.9 2.9 4 4 4Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -172,12 +175,12 @@ function Main() {
             </aside>
 
             {/* 메인 콘텐츠 영역 */}
-            <main className="main-content">
+            <main className={css("main-content")}>
                 {/* 헤더 */}
-                <header className="main-header">
-                    <div className="header-spacer"></div>
+                <header className={css("main-header")}>
+                    <div className={css("header-spacer")}></div>
                     <button
-                        className="profile-button"
+                        className={css("profile-button")}
                         onClick={() => navigate('/mypage')}
                         aria-label="프로필"
                     >
@@ -201,24 +204,24 @@ function Main() {
                 </header>
 
                 {/* 중앙 인사말 */}
-                <div className="welcome-section">
-                    <h1 className="welcome-title">{userName}님 안녕하세요</h1>
-                    <p className="welcome-subtitle">오늘 하루는 어떠셨나요?</p>
+                <div className={css("welcome-section")}>
+                    <h1 className={css("welcome-title")}>{userName}님 안녕하세요</h1>
+                    <p className={css("welcome-subtitle")}>오늘 하루는 어떠셨나요?</p>
                 </div>
 
                 {/* 하단 입력창 */}
-                <div className="input-section">
-                    <div className="input-wrapper">
+                <div className={css("input-section")}>
+                    <div className={css("input-wrapper")}>
                         <input
                             type="text"
-                            className="message-input"
+                            className={css("message-input")}
                             placeholder="어떤 고민이든 털어놓으세요"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
                         />
                         <button
-                            className="send-button"
+                            className={css("send-button")}
                             onClick={handleSendMessage}
                             disabled={!message.trim()}
                         >

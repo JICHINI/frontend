@@ -2,8 +2,11 @@ import React, {useState, useRef, useEffect, useCallback} from 'react';
 import { useNavigate} from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import './Chat.css';
+import styles from "./Chat.module.css";
+import { bindClassNames } from "../utils/classNames";
 import Logo from '../image/Logo.png';
+const css = bindClassNames(styles);
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
@@ -369,20 +372,20 @@ function Chat() {
     };
 
     return (
-        <div className="chat-container">
+        <div className={css("chat-container")}>
             {/* 사이드바 */}
-            <aside className="sidebar">
-                <div className="sidebar-header">
+            <aside className={css("sidebar")}>
+                <div className={css("sidebar-header")}>
                     <img
                         src={Logo}
                         alt="JICHINI"
-                        className="sidebar-logo"
+                        className={css("sidebar-logo")}
                         onClick={() => navigate('/main')}
                     />
                 </div>
 
-                <nav className="sidebar-nav">
-                    <div className="nav-item" onClick={() => navigate('/main')}>
+                <nav className={css("sidebar-nav")}>
+                    <div className={css("nav-item")} onClick={() => navigate('/main')}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M3 10L10 3L17 10V17C17 17.5304 16.7893 18.0391 16.4142 18.4142C16.0391 18.7893 15.5304 19 15 19H5C4.46957 19 3.96086 18.7893 3.58579 18.4142C3.21071 18.0391 3 17.5304 3 17V10Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -390,14 +393,14 @@ function Chat() {
                         <span>홈</span>
                     </div>
 
-                    <div className="nav-item active">
+                    <div className={css("nav-item active")}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M17 9C17 13.4183 13.4183 17 9 17C7.73835 17 6.55719 16.6916 5.52349 16.1462L2 17L2.85382 13.4765C2.30838 12.4428 2 11.2617 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                         <span>채팅</span>
                     </div>
-                    <div className="nav-item" onClick={() => navigate('/history')} style={{ position: 'relative' }}>
+                    <div className={css("nav-item")} onClick={() => navigate('/history')} style={{ position: 'relative' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M4 4H16C17.1 4 18 4.9 18 6V14C18 15.1 17.1 16 16 16H4C2.9 16 2 15.1 2 14V6C2 4.9 2.9 4 4 4Z"
                                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -422,12 +425,12 @@ function Chat() {
             </aside>
 
             {/* 메인 채팅 영역 */}
-            <main className="chat-main">
+            <main className={css("chat-main")}>
                 {/* 헤더 */}
-                <header className="chat-header">
-                    <div className="header-spacer"></div>
+                <header className={css("chat-header")}>
+                    <div className={css("header-spacer")}></div>
                     <button
-                        className="chat-profile-button"
+                        className={css("chat-profile-button")}
                         onClick={() => navigate('/mypage')}
                     >
                         <svg width="50" height="50" viewBox="0 0 32 32" fill="none">
@@ -440,19 +443,19 @@ function Chat() {
                 </header>
 
                 {/* 메시지 영역 */}
-                <div className="messages-container">
+                <div className={css("messages-container")}>
                     {messages.map((msg, index) => (
                         <div key={index}>
                             {msg.sender === 'user' ? (
-                                <div className="message user-message">
-                                    <div className="message-bubble">{msg.text}</div>
+                                <div className={css("message user-message")}>
+                                    <div className={css("message-bubble")}>{msg.text}</div>
                                 </div>
                             ) : msg.hasMatching && msg.cards ? (
-                                <div className="message bot-message matching-message">
-                                    <div className="matching-card">
-                                        <div className="matching-profiles">
+                                <div className={css("message bot-message matching-message")}>
+                                    <div className={css("matching-card")}>
+                                        <div className={css("matching-profiles")}>
                                             {msg.cards.slice(0, 3).map((card, i) => (
-                                                <div key={i} className="profile-icon">
+                                                <div key={i} className={css("profile-icon")}>
                                                     {card.profileImage
                                                         ? <img src={card.profileImage} alt="프로필" style={{width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover'}} />
                                                         : ''
@@ -460,15 +463,15 @@ function Chat() {
                                                 </div>
                                             ))}
                                             {msg.cards.length > 3 && (
-                                                <span className="profile-more">+{msg.cards.length - 3}</span>
+                                                <span className={css("profile-more")}>+{msg.cards.length - 3}</span>
                                             )}
                                         </div>
-                                        <p className="matching-text">
+                                        <p className={css("matching-text")}>
                                             비슷한 고민을 가진<br />
                                             사용자 {msg.cards.length}명 발견!
                                         </p>
                                         <button
-                                            className="matching-button"
+                                            className={css("matching-button")}
                                             onClick={() => handleOpenModal(msg.cards)}
                                         >
                                             대화 해보기
@@ -476,8 +479,8 @@ function Chat() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="message bot-message">
-                                    <div className="message-bubble" style={{ whiteSpace: 'pre-wrap' }}>
+                                <div className={css("message bot-message")}>
+                                    <div className={css("message-bubble")} style={{ whiteSpace: 'pre-wrap' }}>
                                         {msg.text}
                                     </div>
                                 </div>
@@ -489,18 +492,18 @@ function Chat() {
                 </div>
 
                 {/* 입력창 */}
-                <div className="chat-input-section">
-                    <div className="chat-input-wrapper">
+                <div className={css("chat-input-section")}>
+                    <div className={css("chat-input-wrapper")}>
                         <input
                             type="text"
-                            className="chat-input"
+                            className={css("chat-input")}
                             placeholder="메시지를 입력하세요"
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
                         />
                         <button
-                            className="chat-send-button"
+                            className={css("chat-send-button")}
                             onClick={handleSend}
                             disabled={!inputMessage.trim()}
                         >
@@ -515,46 +518,46 @@ function Chat() {
 
             {/* 모달 */}
             {showModal && currentUser && (
-                <div className="modal-overlay" onClick={handleCloseModal}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-profile">
-                            <div className="modal-profile-img">
+                <div className={css("modal-overlay")} onClick={handleCloseModal}>
+                    <div className={css("modal-content")} onClick={(e) => e.stopPropagation()}>
+                        <div className={css("modal-profile")}>
+                            <div className={css("modal-profile-img")}>
                                 {currentUser.profileImage
                                     ? <img src={currentUser.profileImage} alt="프로필" style={{width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover'}} />
                                     : ''
                                 }
                             </div>
-                            <h2 className="modal-name">{currentUser.userId}</h2>
-                            <div className="modal-tags">
+                            <h2 className={css("modal-name")}>{currentUser.userId}</h2>
+                            <div className={css("modal-tags")}>
                                 {currentUser.province && (
-                                    <span className="modal-tag">#{currentUser.province}</span>
+                                    <span className={css("modal-tag")}>#{currentUser.province}</span>
                                 )}
                                 {currentUser.city && (
-                                    <span className="modal-tag">#{currentUser.city}</span>
+                                    <span className={css("modal-tag")}>#{currentUser.city}</span>
                                 )}
                             </div>
 
                             {/* 🔥 고민 / 상세고민 분리 */}
-                            <div className="modal-concern">
+                            <div className={css("modal-concern")}>
                                 {currentUser.concern && (
-                                    <p className="modal-description">
+                                    <p className={css("modal-description")}>
                                         <strong style={{ fontSize: '18px' }}>고민</strong> {currentUser.concern}
                                     </p>
                                 )}
                                 {currentUser.concernDetail && (
-                                    <p className="modal-description">
+                                    <p className={css("modal-description")}>
                                         <strong style={{ fontSize: '18px' }}>상세고민</strong> {currentUser.concernDetail}
                                     </p>
                                 )}
                             </div>
                         </div>
 
-                        <div className="modal-buttons">
-                            <button className="modal-button-cancel" onClick={handleCloseModal}>
+                        <div className={css("modal-buttons")}>
+                            <button className={css("modal-button-cancel")} onClick={handleCloseModal}>
                                 닫기
                             </button>
                             <button
-                                className="modal-button-chat"
+                                className={css("modal-button-chat")}
                                 onClick={handleChatRequest}
                                 disabled={requesting}
                             >
@@ -564,7 +567,7 @@ function Chat() {
 
                         {/* 화살표 버튼 */}
                         <button
-                            className="modal-arrow modal-arrow-left"
+                            className={css("modal-arrow modal-arrow-left")}
                             onClick={handlePrevUser}
                             disabled={matchedUsers.length <= 1}
                         >
@@ -573,7 +576,7 @@ function Chat() {
                             </svg>
                         </button>
                         <button
-                            className="modal-arrow modal-arrow-right"
+                            className={css("modal-arrow modal-arrow-right")}
                             onClick={handleNextUser}
                             disabled={matchedUsers.length <= 1}
                         >

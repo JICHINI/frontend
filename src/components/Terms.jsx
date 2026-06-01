@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Terms.css';
+import styles from "./Terms.module.css";
+import { bindClassNames } from "../utils/classNames";
 import Logo from '../image/Logo.png';
+const css = bindClassNames(styles);
+
 
 function Terms() {
   const [agreeAll, setAgreeAll] = useState(false);
@@ -17,30 +20,30 @@ function Terms() {
   };
 
   return (
-      <div className="terms-container">
-        <div className="terms-header">
-          <img src={Logo} className="terms-logo-img" />
+      <div className={css("terms-container")}>
+        <div className={css("terms-header")}>
+          <img src={Logo} className={css("terms-logo-img")} />
         </div>
 
-        <div className="terms-content">
-          <h1 className="terms-title">전체 동의</h1>
-          <div className="checkbox-wrapper">
+        <div className={css("terms-content")}>
+          <h1 className={css("terms-title")}>전체 동의</h1>
+          <div className={css("checkbox-wrapper")}>
             <input
                 type="checkbox"
                 id="agree-all"
                 checked={agreeAll}
                 onChange={handleAgreeAll}
-                className="checkbox"
+                className={css("checkbox")}
             />
-            <label htmlFor="agree-all" className="checkbox-label">
+            <label htmlFor="agree-all" className={css("checkbox-label")}>
               이용약관 및 개인정보수집 및 이용에 모두 동의합니다.
             </label>
           </div>
 
-          <div className="terms-boxes">
-            <div className="terms-box">
-              <div className="terms-box-header">이용약관 동의 (필수)</div>
-              <div className="terms-box-content">
+          <div className={css("terms-boxes")}>
+            <div className={css("terms-box")}>
+              <div className={css("terms-box-header")}>이용약관 동의 (필수)</div>
+              <div className={css("terms-box-content")}>
                 <p>이용약관</p>
                 <b>제1조(서비스 목적)</b>
                 <p>지치니는 사회초년생이 일상 속 고민을 AI에게 털어놓고, 비슷한 고민을 가진 사용자와 공감 기반으로 소통할 수 있도록 돕는 프로젝트입니다.</p>
@@ -51,9 +54,9 @@ function Terms() {
               </div>
             </div>
 
-            <div className="terms-box">
-              <div className="terms-box-header">개인정보수집 동의 (필수)</div>
-              <div className="terms-box-content">
+            <div className={css("terms-box")}>
+              <div className={css("terms-box-header")}>개인정보수집 동의 (필수)</div>
+              <div className={css("terms-box-content")}>
                 <p>개인정보 수집 및 이용 안내</p>
                 <p>지치니(JICHINI)는 프로젝트 운영을 위해 최소한의 정보만 수집합니다.</p>
                 <b>1. 수집 항목</b>
@@ -67,12 +70,12 @@ function Terms() {
             </div>
           </div>
 
-        <div className="button-group">
-          <button className="cancel-button" onClick={() => navigate('login')}>
+        <div className={css("button-group")}>
+          <button className={css("cancel-button")} onClick={() => navigate('login')}>
             취소
           </button>
           <button 
-            className="complete-button" 
+            className={css("complete-button")} 
             onClick={handleComplete}
             disabled={!agreeAll}
           >
