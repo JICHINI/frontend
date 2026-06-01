@@ -1,599 +1,545 @@
 .mypage-container {
-  display: flex;
-  height: 100vh;
-  background: var(--color-bg);
-  color: var(--color-text);
+    display: flex;
+    height: 100vh;
+    background-color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
-.sidebar {
-  width: 232px;
-  min-height: 100vh;
-  padding: 22px 14px;
-  background: var(--color-surface);
-  border-right: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar-header {
-  display: flex;
-  justify-content: center;
-  padding: 8px 8px 28px;
-}
-
-.sidebar-logo {
-  width: 132px;
-  height: auto;
-  cursor: pointer;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.nav-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 44px;
-  padding: 0 14px;
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.nav-item:hover {
-  background: var(--color-surface-muted);
-  color: var(--color-text);
-}
-
-.active,
-.nav-item.active {
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-}
-
-.nav-item svg {
-  flex-shrink: 0;
-}
-
+/* 메인 영역 */
 .mypage-main {
-  flex: 1;
-  min-width: 0;
-  overflow-y: auto;
-  background: var(--color-bg);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    overflow-y: auto;
 }
 
+/* 헤더 */
 .mypage-header {
-  height: 72px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px 60px 50px 60px;
 }
 
 .mypage-title {
-  margin: 0;
-  color: var(--color-text);
-  font-size: 28px;
-  font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: 0;
+    font-size: 40px;
+    font-weight: 800;
+    color: #000;
+    margin: 0;
 }
 
 .mypage-profile-button {
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border-radius: 50%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
 }
 
 .mypage-profile-button:hover {
-  border-color: var(--color-primary);
+    opacity: 0.7;
 }
 
+/* 프로필 카드 */
 .mypage-profile-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  margin: 0 32px 18px;
-  padding: 22px 24px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 24px;
+    padding: 32px 40px;
+    margin: 0 60px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .profile-image-section {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 18px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
 }
 
 .profile-image {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: var(--color-primary-soft);
-  border: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #a5aeb8 0%, #bad3e6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    border: 4px solid white;
+    flex-shrink: 0;
 }
 
 .profile-name-section {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .profile-name-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 8px 16px;
 }
 
-.profile-name,
-.profile-name-input {
-  color: var(--color-text);
-  font-size: 20px;
-  font-weight: 800;
-  line-height: 1.3;
+.profile-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
 }
 
+/* 👇 여기에 추가 */
 .profile-name-input {
-  width: 180px;
-  padding: 8px 10px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  outline: 0;
-  background: var(--color-surface);
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 150px;
+    padding: 0;
 }
 
 .profile-name-input:focus {
-  border-color: var(--color-primary);
+    border-bottom: 2px solid #50B6FF;
 }
 
 .edit-icon-button {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--color-surface-muted);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s;
 }
 
 .edit-icon-button:hover {
-  color: var(--color-primary);
+    opacity: 0.7;
 }
 
 .profile-tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 10px;
+    padding-left: 4px;
 }
 
 .profile-tag-item {
-  color: var(--color-text-muted);
-  font-size: 13px;
-  font-weight: 700;
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
 }
 
 .profile-buttons {
-  display: flex;
-  gap: 10px;
-  flex-shrink: 0;
+    display: flex;
+    gap: 12px;
 }
 
 .profile-button-secondary,
 .profile-button-primary {
-  padding: 12px 18px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 800;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 .profile-button-secondary {
-  background: var(--color-surface);
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
+    background-color: white;
+    border: 2px solid #50B6FF;
+    color: #50B6FF;
 }
 
 .profile-button-secondary:hover {
-  background: var(--color-primary-soft);
+    background-color: #f0f9ff;
 }
 
 .profile-button-primary {
-  background: var(--color-primary);
-  color: #FFFFFF;
+    background-color: #50B6FF;
+    color: white;
 }
 
 .profile-button-primary:hover {
-  background: var(--color-primary-hover);
+    background-color: #32A9FF;
 }
 
+/* 정보 필드들 */
 .mypage-fields {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  padding: 0 32px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 60px;
+    margin-bottom: 40px;
 }
 
 .mypage-field {
-  display: flex;
-  align-items: stretch;
-  gap: 8px;
-  min-width: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .mypage-field.wide {
-  grid-column: span 2;
+    grid-column: span 2;
 }
 
 .mypage-input {
-  flex: 1;
-  min-width: 0;
-  min-height: 52px;
-  padding: 14px 16px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text);
-  outline: 0;
-  font-size: 15px;
-  line-height: 1.5;
+    flex: 1;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 16px 20px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: all 0.2s;
 }
 
-.mypage-input.editing,
-.mypage-input:focus {
-  border-color: var(--color-primary);
+.mypage-input.editing {
+    border-color: #50B6FF;
 }
-
+/* textarea 스타일 */
 .mypage-field.wide textarea.mypage-input {
-  min-height: 96px;
-  max-height: 180px;
-  resize: vertical;
+    resize: vertical;
+    min-height: 80px;
+    max-height: 150px;
+    font-family: inherit;
 }
 
 .field-edit-button {
-  width: 46px;
-  min-width: 46px;
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    border: 2px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
 }
 
 .field-edit-button:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+    border-color: #50B6FF;
+    background-color: #f0f9ff;
+}
+/* select를 input처럼 보이게 */
+select.mypage-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    flex: 1;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 16px 20px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    height: 54px; /* input 높이 맞춤 */
 }
 
-select.mypage-input {
-  height: 52px;
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23687887' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 38px;
+/* 포커스 상태 */
+select.mypage-input:focus {
+    border-color: #50B6FF;
+}
+
+/* editing 상태 유지 */
+select.mypage-input.editing {
+    border-color: #50B6FF;
 }
 
 .mypage-save-button {
-  width: 100%;
-  min-height: 52px;
-  padding: 0 18px;
-  border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: #FFFFFF;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 800;
+    padding: 16px 60px;
+    background-color: #50B6FF;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    height: 50px;
 }
 
 .mypage-save-button:hover {
-  background: var(--color-primary-hover);
+    background-color: #32A9FF;
 }
 
+/* 하단 버튼 */
 .mypage-bottom-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  padding: 28px 32px 40px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 50px 60px 50px;
 }
 
 .mypage-logout-button,
 .mypage-delete-button {
-  min-width: 150px;
-  padding: 14px 24px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 800;
+    padding: 16px 60px;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
 }
 
 .mypage-logout-button {
-  background: var(--color-danger);
-  color: #FFFFFF;
+    background-color: #FF4444;
+    color: white;
 }
 
 .mypage-logout-button:hover {
-  background: #E63939;
+    background-color: #E63939;
 }
 
 .mypage-delete-button {
-  background: #8C99A5;
-  color: #FFFFFF;
+    background-color: #9E9E9E;
+    color: white;
 }
 
 .mypage-delete-button:hover {
-  background: #778590;
+    background-color: #757575;
 }
 
+/* 반응형 */
+@media (max-width: 1200px) {
+    .mypage-fields {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mypage-field.wide {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .mypage-header {
+        padding: 20px 30px 15px;
+    }
+
+    .mypage-title {
+        font-size: 24px;
+    }
+
+    .mypage-profile-card {
+        flex-direction: column;
+        gap: 24px;
+        margin: 0 30px 20px;
+        padding: 24px;
+    }
+
+    .profile-image-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .profile-button-secondary,
+    .profile-button-primary {
+        width: 100%;
+    }
+
+    .mypage-fields {
+        grid-template-columns: 1fr;
+        padding: 0 30px;
+        gap: 15px;
+    }
+
+    .mypage-field.wide {
+        grid-column: span 1;
+    }
+
+    .mypage-bottom-buttons {
+        flex-direction: column;
+        padding: 20px 30px 40px;
+    }
+
+    .mypage-logout-button,
+    .mypage-delete-button {
+        width: 100%;
+    }
+    .mypage-save-section {
+        padding: 0 30px 15px;
+    }
+
+    .mypage-save-button {
+        width: 100%;
+        padding: 14px;
+    }
+
+    .profile-name-input {
+        width: 120px;
+    }
+}
+/* 태그 변경 모달 */
 .tag-modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(23, 32, 42, 0.42);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
 }
 
 .tag-modal-content {
-  width: min(460px, 100%);
-  padding: 26px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
 }
 
 .tag-modal-title {
-  margin: 0 0 18px;
-  color: var(--color-text);
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1.25;
-  text-align: center;
-  letter-spacing: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 24px 0;
+    text-align: center;
 }
 
 .tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-height: 48px;
-  margin-bottom: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    min-height: 60px;
 }
 
 .tag-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
-  background: var(--color-primary-soft);
-  border-radius: 999px;
-  color: #287EBB;
-  font-size: 13px;
-  font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #E3F2FD;
+    border: 1px solid #50B6FF;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #333;
 }
 
 .tag-remove-button {
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  line-height: 1;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
 }
 
 .tag-remove-button:hover {
-  color: var(--color-danger);
+    color: #FF4444;
 }
 
 .tag-input-section {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .tag-input {
-  flex: 1;
-  min-width: 0;
-  padding: 12px 14px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  outline: 0;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: 15px;
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
 }
 
 .tag-input:focus {
-  border-color: var(--color-primary);
+    border-color: #50B6FF;
 }
 
 .tag-add-button {
-  padding: 12px 16px;
-  border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: #FFFFFF;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 800;
+    padding: 12px 24px;
+    background-color: #50B6FF;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .tag-add-button:hover:not(:disabled) {
-  background: var(--color-primary-hover);
+    background-color: #29B6F6;
 }
 
 .tag-add-button:disabled {
-  background: #CBD6DF;
-  cursor: not-allowed;
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 .tag-hint {
-  margin: 0 0 18px;
-  color: var(--color-text-muted);
-  font-size: 13px;
-  text-align: center;
+    font-size: 13px;
+    color: #666;
+    margin: 0 0 24px 0;
+    text-align: center;
 }
 
 .tag-modal-buttons {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 12px;
 }
 
 .tag-modal-cancel,
 .tag-modal-save {
-  flex: 1;
-  padding: 13px 16px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 800;
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
 .tag-modal-cancel {
-  background: var(--color-surface-muted);
-  color: var(--color-text-muted);
-  border: 1px solid var(--color-border);
+    background-color: #e0e0e0;
+    color: #666;
+}
+
+.tag-modal-cancel:hover {
+    background-color: #d0d0d0;
 }
 
 .tag-modal-save {
-  background: var(--color-primary);
-  color: #FFFFFF;
+    background-color: #50B6FF;
+    color: white;
 }
 
 .tag-modal-save:hover {
-  background: var(--color-primary-hover);
-}
-
-.mypage-main::-webkit-scrollbar {
-  width: 8px;
-}
-
-.mypage-main::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.mypage-main::-webkit-scrollbar-thumb {
-  background: #CAD7E1;
-  border-radius: 999px;
-}
-
-@media (max-width: 1180px) {
-  .mypage-fields {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .mypage-field.wide {
-    grid-column: span 2;
-  }
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 76px;
-    padding: 18px 10px;
-  }
-
-  .sidebar-logo {
-    width: 46px;
-  }
-
-  .nav-item {
-    justify-content: center;
-    padding: 0;
-  }
-
-  .nav-item span {
-    display: none;
-  }
-
-  .mypage-header {
-    height: 64px;
-    padding: 0 20px;
-  }
-
-  .mypage-title {
-    font-size: 24px;
-  }
-
-  .mypage-profile-card {
-    margin: 0 20px 16px;
-    padding: 20px;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .profile-image-section {
-    align-items: center;
-  }
-
-  .profile-buttons {
-    width: 100%;
-  }
-
-  .profile-button-secondary,
-  .profile-button-primary {
-    flex: 1;
-  }
-
-  .mypage-fields {
-    grid-template-columns: 1fr;
-    padding: 0 20px;
-  }
-
-  .mypage-field.wide {
-    grid-column: span 1;
-  }
-
-  .mypage-bottom-buttons {
-    flex-direction: column;
-    padding: 22px 20px 32px;
-  }
-
-  .mypage-logout-button,
-  .mypage-delete-button {
-    width: 100%;
-  }
-
-  .tag-input-section,
-  .tag-modal-buttons {
-    flex-direction: column;
-  }
+    background-color: #32A9FF;
 }
